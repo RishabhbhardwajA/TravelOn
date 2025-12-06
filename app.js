@@ -2,7 +2,6 @@ if(process.env.NODE_ENV!="production"){
 require('dotenv').config();
 }
 
-console.log(process.env.SECRET);
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -33,8 +32,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 console.log("MERI VALUE YAHAN HAI:", MongoStore);
 
+if (process.env.NODE_ENV === "production") {
+  app.set('trust proxy', 1);
+  console.log("✅ Trust proxy enabled for production");
+};
+
 // DATABASE
 const mongoDbUrl= process.env.ATLASDB_URL;
+console.log("🔍 Environment:", process.env.NODE_ENV);
+console.log("🔍 MongoDB URL exists:", !!mongoDbUrl);
+console.log("🔍 SECRET exists:", !!process.env.SECRET);
 async function main() {
   await mongoose.connect(mongoDbUrl);
 }
@@ -55,17 +62,18 @@ const  store= MongoStore.create({
 store.on("error",(err)=>{
   console.log("ERROR IN MONGO_SESSION STORE",err);
 });
-
+console.log("✅ MongoStore created");
 const sessionOptions = {
   store,
   secret: process.env.SECRET ,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true, 
-    secure: true, 
+  secure: process.env.NODE_ENV === "production", 
+  sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax' 
   },
 };
 
@@ -149,6 +157,7 @@ app.use((err, req, res, next) => {
 
 
 // Server
-app.listen(8080, () => {
-  console.log("listening on port 8080");
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
