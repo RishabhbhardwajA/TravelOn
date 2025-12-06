@@ -13,6 +13,10 @@ const Listing= require("../model/listing.js");
 
 const initDB= async ()=>{
     await Listing.deleteMany({});
+    init.data = init.data.map((obj) => ({
+    ...obj,
+    owner: "6930ad26d8f3f4c068986893", 
+  }));
     await Listing.insertMany(init.data);
     console.log("data inserted");
 };

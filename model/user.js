@@ -1,14 +1,21 @@
-const { request } = require("express");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const passportLocalMongoose = require('passport-local-mongoose');
+let passportLocalMongoose = require("passport-local-mongoose");
 
-const User=new Schema({
-    email:{
-       type: String,
-        required:true,
-    }
+ 
+if (typeof passportLocalMongoose !== 'function' && passportLocalMongoose.default) {
+    passportLocalMongoose = passportLocalMongoose.default;
+}
+// -----------------
+
+const userSchema = new Schema({
+  email: {
+    type: String,
+    required: true,
+  }
 });
 
-User.plugin(passportLocalMongoose);
-module.exports = mongoose.model('User', User);
+// अब यहाँ सही function पास होगा
+userSchema.plugin(passportLocalMongoose);
+
+module.exports = mongoose.model("User", userSchema);

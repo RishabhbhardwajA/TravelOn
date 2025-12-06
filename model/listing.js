@@ -43,7 +43,29 @@ const ListingSchema = new Schema({
 
   review:[{
     type:Schema.Types.ObjectId,
-    ref:"Review"},]
+    ref:"Review"},],
+
+   owner:{
+    type:Schema.Types.ObjectId,
+    ref:"User"
+   } ,
+
+   geometry: {
+        type: {
+            type: String, 
+            enum: ['Point'], 
+            required: true
+        },
+    coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
+    category: {
+        type: String,
+        enum: ["Trending", "Rooms", "Iconic", "Mountains", "Castles", "Pools", "Camping", "Farms", "Arctic", "Domes", "Boats"]
+    }
+
   
 });
 
