@@ -122,7 +122,7 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user;
-  res.locals.baseUrl = "https://wanderlust-risha.onrender.com"; // Fallback URL or use process.env
+  res.locals.baseUrl = "https://travel-listing-pyt8.onrender.com";
   next();
 });
 

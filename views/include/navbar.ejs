@@ -22,6 +22,110 @@
     padding: 0.5rem 3rem 0.5rem 3rem;
     font-size: 0.9rem;
   }
+
+  /* User Menu Dropdown Styles */
+  .user-menu-btn {
+    background: linear-gradient(135deg, #fe424d, #ff6b6b);
+    border: none;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(254, 66, 77, 0.3);
+  }
+
+  .user-menu-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(254, 66, 77, 0.4);
+    background: linear-gradient(135deg, #ff6b6b, #fe424d);
+  }
+
+  .user-menu-btn::after {
+    display: none !important;
+  }
+
+  .user-dropdown-menu {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    padding: 0.5rem 0;
+    min-width: 220px;
+    margin-top: 10px !important;
+    animation: slideDown 0.2s ease;
+    overflow: hidden;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .user-dropdown-header {
+    padding: 1rem 1.2rem;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-bottom: 1px solid #eee;
+  }
+
+  .user-dropdown-header .username {
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .user-dropdown-header .email-hint {
+    font-size: 0.75rem;
+    color: #888;
+    margin: 0;
+  }
+
+  .user-dropdown-menu .dropdown-item {
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: #444;
+    transition: all 0.2s ease;
+  }
+
+  .user-dropdown-menu .dropdown-item:hover {
+    background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+    color: #fe424d;
+  }
+
+  .user-dropdown-menu .dropdown-item i {
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  .user-dropdown-menu .dropdown-divider {
+    margin: 0.3rem 0;
+    border-color: #eee;
+  }
+
+  .user-dropdown-menu .logout-item {
+    color: #dc3545;
+  }
+
+  .user-dropdown-menu .logout-item:hover {
+    background: linear-gradient(135deg, #fff5f5, #ffe0e0);
+    color: #c82333;
+  }
 </style>
 
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
@@ -50,17 +154,50 @@
       <div class="navbar-nav ms-auto">
         <a class="nav-link" href="/listings/new">New listing</a>
 
-
         <% if(typeof currUser==='undefined' || !currUser) { %>
           <a class="nav-link" href="/signup"><b>SignUp</b></a>
           <a class="nav-link" href="/login"><b>Login</b></a>
           <% } %>
 
             <% if(typeof currUser !=='undefined' && currUser) { %>
-              <a class="nav-link wishlist-nav-link" href="/listings/wishlist" title="My Wishlist">
-                <i class="fas fa-heart"></i> Wishlist
-              </a>
-              <a class="nav-link" href="/logout"><b>Logout</b></a>
+              <!-- User Dropdown Menu -->
+              <div class="dropdown">
+                <button class="user-menu-btn dropdown-toggle" type="button" id="userMenuDropdown"
+                  data-bs-toggle="dropdown" aria-expanded="false" title="<%= currUser.username %>">
+                  <i class="fas fa-user"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" aria-labelledby="userMenuDropdown">
+                  <li>
+                    <div class="user-dropdown-header">
+                      <p class="username"><i class="fas fa-circle-user"></i>
+                        <%= currUser.username %>
+                      </p>
+                      <p class="email-hint">Welcome back!</p>
+                    </div>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/listings/wishlist">
+                      <i class="fas fa-heart" style="color: #fe424d;"></i> My Wishlist
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/change-password">
+                      <i class="fas fa-key" style="color: #ffc107;"></i> Change Password
+                    </a>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li>
+                    <a class="dropdown-item logout-item" href="/logout">
+                      <i class="fas fa-right-from-bracket"></i> Logout
+                    </a>
+                  </li>
+                </ul>
+              </div>
               <% } %>
       </div>
 

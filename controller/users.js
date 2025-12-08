@@ -62,3 +62,39 @@ module.exports.logout = (req, res, next) => {
         res.redirect("/login");
     });
 };
+
+// Show change password form
+module.exports.changePasswordPage = (req, res) => {
+    res.render("listing/userpage/change-password.ejs");
+};
+
+// Handle password change
+module.exports.changePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword, confirmPassword } = req.body;
+
+        // Check if new passwords match
+        if (newPassword !== confirmPassword) {
+            req.flash("error", "New passwords do not match");
+            return res.redirect("/change-password");
+        }
+
+        // Check minimum password length
+        if (newPassword.length < 6) {
+            req.flash("error", "New password must be at least 6 characters");
+            return res.redirect("/change-password");
+        }
+
+        // Get current user
+        const user = await User.findById(req.user._id);
+
+        // Use passport-local-mongoose's changePassword method
+        await user.changePassword(currentPassword, newPassword);
+
+        req.flash("success", "Password changed successfully!");
+        res.redirect("/listings");
+    } catch (err) {
+        req.flash("error", err.message || "Could not change password. Please check your current password.");
+        res.redirect("/change-password");
+    }
+};
