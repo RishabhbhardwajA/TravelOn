@@ -1,60 +1,136 @@
 <% layout("layout/boilerplate")%>
-    <div class="row">
-        <div class="col-8 offset-2">
-            <h3>Create a new listing</h3>
-            <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" name="listing[title]" placeholder="Title" class="form-control">
-                    <div class="invalid-feedback">Write a title!</div>
-                </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description:</label>
-                    <textarea name="listing[description]" placeholder="Enter description"
-                        class="form-control"></textarea>
-                    <div class="invalid-feedback">Write a short description</div>
-                </div>
-                <div class="row">
 
-                    <div class="mb-3 col-md-4">
-                        <label for="price" class="form-label">Price:</label>
-                        <input type="number" id="price" name="listing[price]" placeholder="Enter price"
-                            class="form-control">
+    <div class="new-listing-container">
+        <div class="new-listing-card">
+            <div class="form-header">
+                <i class="fas fa-plus-circle header-icon"></i>
+                <h2>Create New Listing</h2>
+            </div>
+
+            <form method="POST" action="/listings" novalidate class="needs-validation listing-form"
+                enctype="multipart/form-data">
+
+                <!-- Title -->
+                <div class="form-group">
+                    <label for="title"><i class="fas fa-heading"></i> Title</label>
+                    <input type="text" name="listing[title]" id="title" placeholder="Give your place a catchy title"
+                        class="form-control" required>
+                    <div class="invalid-feedback">Please add a title</div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="description"><i class="fas fa-align-left"></i> Description</label>
+                    <textarea name="listing[description]" id="description"
+                        placeholder="Describe what makes your place special..." class="form-control" rows="4"
+                        required></textarea>
+                    <div class="invalid-feedback">Please add a description</div>
+                </div>
+
+                <!-- Price & Country Row -->
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="price"><i class="fas fa-rupee-sign"></i> Price per night</label>
+                        <input type="number" id="price" name="listing[price]" placeholder="₹ 0" class="form-control"
+                            required>
                         <div class="invalid-feedback">Enter a valid price</div>
                     </div>
-                    <div class="mb-3 col-md-8">
-                        <label for="Country" class="form-label">Country:</label>
-                        <input type="text" name="listing[country]" placeholder="Enter counrty" class="form-control">
-                        <div class="invalid-feedback">Enter a valid counrty</div>
+                    <div class="form-group half">
+                        <label for="country"><i class="fas fa-globe-asia"></i> Country</label>
+                        <input type="text" name="listing[country]" id="country" placeholder="e.g. India"
+                            class="form-control" required>
+                        <div class="invalid-feedback">Enter country name</div>
                     </div>
-                    <div class="mb-3">
-                        <label for="category" class="form-label">Category</label>
-                        <select name="listing[category]" id="category" class="form-control" required>
-                            <option value="">Select a category</option>
+                </div>
 
+                <!-- Category - Custom Dropdown -->
+                <div class="form-group">
+                    <label><i class="fas fa-tags"></i> Category</label>
+                    <input type="hidden" name="listing[category]" id="categoryInput" required>
+                    <div class="custom-select-wrapper">
+                        <div class="custom-select" id="categorySelect">
+                            <span class="selected-text">Select a category</span>
+                            <i class="fas fa-chevron-down arrow"></i>
+                        </div>
+                        <div class="custom-options" id="categoryOptions">
                             <% for(let cat of category) { %>
-                                <option value="<%= cat %>">
+                                <div class="custom-option" data-value="<%= cat %>">
+                                    <i class="fas fa-check check-icon"></i>
                                     <%= cat %>
-                                </option>
+                                </div>
                                 <% } %>
-                        </select>
-                        <div class="invalid-feedback">Please select a category</div>
+                        </div>
                     </div>
-
+                    <div class="invalid-feedback">Please select a category</div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="image" class="form-label">Image link:</label>
-                    <input type="file" placeholder="Enter img url" name="listing[image]" class="form-control" required>
+                <!-- Image Upload -->
+                <div class="form-group">
+                    <label for="image"><i class="fas fa-image"></i> Upload Image</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" name="listing[image]" id="image" class="form-control" required
+                            accept="image/*">
+                    </div>
+                    <small class="form-hint">JPG, PNG or WebP (max 5MB)</small>
                 </div>
 
-                <div class="mb-3">
-                    <label for="loaction" class="form-label">Loaction:</label>
-                    <input type="text" name="listing[location]" placeholder="Enter location" class="form-control">
-                    <div class="invalid-feedback">Enter a valid location</div>
+                <!-- Location -->
+                <div class="form-group">
+                    <label for="location"><i class="fas fa-map-marker-alt"></i> Location</label>
+                    <input type="text" name="listing[location]" id="location" placeholder="e.g. Mumbai, Maharashtra"
+                        class="form-control" required>
+                    <div class="invalid-feedback">Enter location</div>
                 </div>
 
-                <button class="btn btn-dark add-btn">Add</button>
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-plus"></i> Create Listing
+                </button>
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectBox = document.getElementById('categorySelect');
+            const optionsBox = document.getElementById('categoryOptions');
+            const hiddenInput = document.getElementById('categoryInput');
+            const selectedText = selectBox.querySelector('.selected-text');
+            const options = document.querySelectorAll('.custom-option');
+
+            // Toggle dropdown
+            selectBox.addEventListener('click', function (e) {
+                e.stopPropagation();
+                selectBox.classList.toggle('active');
+                optionsBox.classList.toggle('show');
+            });
+
+            // Select option
+            options.forEach(option => {
+                option.addEventListener('click', function () {
+                    const value = this.dataset.value;
+
+                    // Update hidden input
+                    hiddenInput.value = value;
+
+                    // Update selected text
+                    selectedText.textContent = value;
+                    selectedText.classList.remove('placeholder');
+
+                    // Update selected state
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+
+                    // Close dropdown
+                    selectBox.classList.remove('active');
+                    optionsBox.classList.remove('show');
+                });
+            });
+
+            // Close on outside click
+            document.addEventListener('click', function () {
+                selectBox.classList.remove('active');
+                optionsBox.classList.remove('show');
+            });
+        });
+    </script>

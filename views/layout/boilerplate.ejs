@@ -18,7 +18,6 @@
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -31,13 +30,11 @@
 
         <%- include('../include/footer') %>
 
-            <!-- Dark Mode Toggle -->
             <button class="dark-mode-toggle" id="darkModeToggle" title="Toggle Dark Mode">
                 <i class="fas fa-moon"></i>
                 <i class="fas fa-sun"></i>
             </button>
 
-            <!-- Back to Top Button -->
             <button class="back-to-top" id="backToTop" title="Back to Top">
                 <i class="fas fa-chevron-up"></i>
             </button>
@@ -74,7 +71,7 @@
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
 
-                // Category Scroll Functionality
+                // Category Scroll
                 const filtersContainer = document.querySelector('.filters');
                 const scrollLeftBtn = document.querySelector('.scroll-left');
                 const scrollRightBtn = document.querySelector('.scroll-right');

@@ -43,14 +43,33 @@
 /* Dark Mode Variables */
 [data-theme="dark"] {
     --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    --glass-bg: rgba(30, 30, 50, 0.85);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(40, 40, 60, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.15);
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     --white: #1A1A2E;
     --grey-100: #2A2A3E;
     --text-primary: #FFFFFF;
     --text-secondary: #B0B0B0;
     --card-bg: rgba(30, 30, 50, 0.6);
+}
+
+/* Dark Mode - Search Bar Fix */
+[data-theme="dark"] .search-input,
+[data-theme="dark"] .form-control.me-2 {
+    background: rgba(50, 50, 70, 0.9) !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .search-input::placeholder,
+[data-theme="dark"] .form-control.me-2::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+[data-theme="dark"] .search-input:focus,
+[data-theme="dark"] .form-control.me-2:focus {
+    background: rgba(60, 60, 80, 1) !important;
+    border-color: var(--primary) !important;
 }
 
 /* Global Reset */
@@ -81,6 +100,12 @@ body {
 /* ============================================
    GLASSMORPHIC NAVBAR
    ============================================ */
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
 .navbar {
     height: 5rem;
     background: var(--glass-bg);
@@ -471,20 +496,93 @@ body {
    ============================================ */
 
 .listing-card {
-    background: linear-gradient(160deg, #ffffff 0%, #f8fafc 100%) !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
     border-radius: 32px !important;
     overflow: hidden !important;
     margin-bottom: 2rem;
-    transition: all 0.4s ease;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 2px solid rgba(255, 255, 255, 0.9) !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+
+    /* SMOOTH Transition */
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background 0.3s ease,
+        border-color 0.3s ease,
+        opacity 0.6s ease;
+
+    /* Initial */
+    opacity: 0;
 }
 
+/* Fade animation - opacity only */
+@keyframes cardFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Stagger */
+.listing-card:nth-child(1) {
+    animation: cardFadeIn 0.6s ease 0.1s forwards;
+}
+
+.listing-card:nth-child(2) {
+    animation: cardFadeIn 0.6s ease 0.15s forwards;
+}
+
+.listing-card:nth-child(3) {
+    animation: cardFadeIn 0.6s ease 0.2s forwards;
+}
+
+.listing-card:nth-child(4) {
+    animation: cardFadeIn 0.6s ease 0.25s forwards;
+}
+
+.listing-card:nth-child(5) {
+    animation: cardFadeIn 0.6s ease 0.3s forwards;
+}
+
+.listing-card:nth-child(6) {
+    animation: cardFadeIn 0.6s ease 0.35s forwards;
+}
+
+.listing-card:nth-child(7) {
+    animation: cardFadeIn 0.6s ease 0.4s forwards;
+}
+
+.listing-card:nth-child(8) {
+    animation: cardFadeIn 0.6s ease 0.45s forwards;
+}
+
+.listing-card:nth-child(9) {
+    animation: cardFadeIn 0.6s ease 0.5s forwards;
+}
+
+.listing-card:nth-child(10) {
+    animation: cardFadeIn 0.6s ease 0.55s forwards;
+}
+
+.listing-card:nth-child(11) {
+    animation: cardFadeIn 0.6s ease 0.6s forwards;
+}
+
+.listing-card:nth-child(12) {
+    animation: cardFadeIn 0.6s ease 0.65s forwards;
+}
+
+/* SMOOTH HOVER */
 .listing-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-15px) scale(1.025) !important;
+    background: rgba(255, 255, 255, 0.45) !important;
     box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.12),
-        0 8px 20px rgba(0, 0, 0, 0.08);
+        0 28px 70px rgba(0, 0, 0, 0.18),
+        0 12px 30px rgba(255, 56, 92, 0.12),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.85) !important;
+    border-color: rgba(255, 255, 255, 0.85) !important;
 }
 
 .listing-link {
@@ -573,9 +671,28 @@ body {
     display: none;
 }
 
-/* ===== Dark Mode ===== */
+/* ===== Dark Mode - Cards ===== */
 [data-theme="dark"] .listing-card {
-    background: #1e1e2e;
+    background: rgba(30, 30, 50, 0.4) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .listing-card:hover {
+    background: rgba(40, 40, 60, 0.5) !important;
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.4),
+        0 10px 25px rgba(255, 56, 92, 0.15),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 56, 92, 0.4) !important;
+}
+
+[data-theme="dark"] .card-body {
+    background: transparent;
 }
 
 [data-theme="dark"] .card-text b {
@@ -587,7 +704,15 @@ body {
 }
 
 [data-theme="dark"] .listing-price {
+    color: #FF385C;
+}
+
+[data-theme="dark"] .listing-rating {
     color: #ffffff;
+}
+
+[data-theme="dark"] .tax-info {
+    color: #888888;
 }
 
 /* ============================================
@@ -610,31 +735,160 @@ body {
 
 .btns {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
+    align-items: center;
 }
 
-/* Show Page */
+/* Edit Button */
+.edit-btn {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 16px !important;
+    padding: 0.75rem 1.5rem !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    transition: all 0.3s ease !important;
+}
+
+.edit-btn:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
+    background: linear-gradient(135deg, #059669, #047857) !important;
+}
+
+.edit-btn i {
+    font-size: 0.9rem;
+}
+
+/* Delete Button */
+.delete-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 16px !important;
+    padding: 0.75rem 1.5rem !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    transition: all 0.3s ease !important;
+}
+
+.delete-btn:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4) !important;
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+}
+
+.delete-btn i {
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   SHOW PAGE - GLASSMORPHISM DESIGN
+   ============================================ */
+
+/* Main Listing Card on Show Page - Same as Index Cards */
+.liting-card {
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-radius: 32px !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    transition: all 0.4s ease;
+    padding: 12px !important;
+}
+
+.liting-card:hover {
+    background: rgba(255, 255, 255, 0.35) !important;
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.15),
+        0 10px 25px rgba(255, 56, 92, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.liting-card .card-body {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(10px) !important;
+    padding: 1.5rem !important;
+    border-radius: 24px !important;
+    margin-top: 12px;
+}
+
+/* Show Page Image - Curvy like Index */
 .show-image {
     object-fit: cover !important;
-    margin-top: 5px;
+    width: 100% !important;
     height: auto;
     max-height: 500px;
-    border-radius: 1.5rem !important;
-    box-shadow: var(--shadow-soft);
-    transition: all 0.3s var(--ease-smooth);
+    border-radius: 24px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
 }
 
 .show-image:hover {
     transform: scale(1.01);
-    box-shadow: var(--shadow-hover);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* Map */
+/* Review Cards - Glass Effect */
+.review-card {
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(15px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(15px) saturate(150%) !important;
+    border-radius: 24px !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.review-card .card-body {
+    background: transparent !important;
+}
+
+/* Map Container - Glass */
 #map {
     height: 300px;
     width: 100%;
-    border-radius: 1rem;
-    box-shadow: var(--shadow-soft);
+    border-radius: 24px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ===== Show Page Dark Mode ===== */
+[data-theme="dark"] .liting-card {
+    background: rgba(30, 30, 50, 0.4) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-theme="dark"] .liting-card .card-body {
+    background: rgba(30, 30, 50, 0.5) !important;
+}
+
+[data-theme="dark"] .review-card {
+    background: rgba(30, 30, 50, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] #map {
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Tax Toggle */
@@ -1378,5 +1632,397 @@ body {
     .custom-toast {
         width: 100%;
         max-width: 100%;
+    }
+}
+
+/* ============================================
+   NEW LISTING PAGE STYLES
+   ============================================ */
+.new-listing-container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    min-height: 80vh;
+}
+
+.new-listing-card {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header-icon {
+    font-size: 3rem;
+    background: linear-gradient(135deg, #FF385C, #ff6b8a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.form-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.form-header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.listing-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.listing-form label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.listing-form label i {
+    color: #FF385C;
+    margin-right: 8px;
+    width: 18px;
+}
+
+.listing-form .form-control {
+    background: rgba(255, 255, 255, 0.7) !important;
+    border: 2px solid rgba(255, 255, 255, 0.5) !important;
+    border-radius: 16px !important;
+    padding: 0.9rem 1.2rem !important;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.listing-form .form-control:focus {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #FF385C !important;
+    box-shadow: 0 0 0 4px rgba(255, 56, 92, 0.15) !important;
+}
+
+.listing-form .form-control::placeholder {
+    color: #999;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-group.half {
+    flex: 1;
+}
+
+.form-hint {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #FF385C, #E31C5F);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 4px 20px rgba(255, 56, 92, 0.3);
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(255, 56, 92, 0.4);
+}
+
+/* Custom Dropdown Styles */
+.custom-select-wrapper {
+    position: relative;
+}
+
+.custom-select {
+    background: rgba(255, 255, 255, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    padding: 0.9rem 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.custom-select:hover {
+    border-color: rgba(255, 56, 92, 0.5);
+}
+
+.custom-select.active {
+    border-color: #FF385C;
+    box-shadow: 0 0 0 4px rgba(255, 56, 92, 0.15);
+}
+
+.custom-select .arrow {
+    color: #FF385C;
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+}
+
+.custom-select.active .arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select .selected-text {
+    color: #333;
+}
+
+.custom-select .selected-text.placeholder {
+    color: #999;
+}
+
+.custom-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.custom-options.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.custom-option {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    color: #333;
+}
+
+.custom-option:first-child {
+    border-radius: 16px 16px 0 0;
+}
+
+.custom-option:last-child {
+    border-radius: 0 0 16px 16px;
+}
+
+.custom-option:hover {
+    background: linear-gradient(135deg, #FF385C, #ff6b8a);
+    color: white;
+}
+
+.custom-option .check-icon {
+    opacity: 0;
+    color: #FF385C;
+    font-size: 0.8rem;
+}
+
+.custom-option.selected {
+    background: rgba(255, 56, 92, 0.1);
+}
+
+.custom-option.selected .check-icon {
+    opacity: 1;
+}
+
+.custom-option:hover .check-icon {
+    color: white;
+}
+
+/* New Listing Dark Mode */
+[data-theme="dark"] .new-listing-card {
+    background: rgba(30, 30, 50, 0.6);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .form-header h2 {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .form-header p {
+    color: #a0a0a0;
+}
+
+[data-theme="dark"] .listing-form label {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .listing-form label i {
+    color: #FF385C;
+}
+
+[data-theme="dark"] .listing-form .form-control {
+    background: rgba(50, 50, 70, 0.9) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .listing-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .listing-form .form-control:focus {
+    background: rgba(60, 60, 80, 1) !important;
+    border-color: #FF385C !important;
+}
+
+[data-theme="dark"] .form-hint {
+    color: #a0a0a0;
+}
+
+[data-theme="dark"] .custom-select {
+    background: rgba(50, 50, 70, 0.9);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .custom-select .selected-text {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .custom-select .arrow {
+    color: #FF385C;
+}
+
+[data-theme="dark"] .custom-options {
+    background: #2a2a3e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .custom-option {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .custom-option:hover {
+    background: linear-gradient(135deg, #FF385C, #ff6b8a);
+}
+
+[data-theme="dark"] .custom-option.selected {
+    background: rgba(255, 56, 92, 0.2);
+}
+
+/* Dark Mode - General Text Fixes */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+    color: #ffffff;
+}
+
+[data-theme="dark"] p {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] label {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .form-label {
+    color: #ffffff;
+}
+
+[data-theme="dark"] textarea.form-control {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] select.form-control {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] input.form-control {
+    color: #ffffff !important;
+}
+
+/* Dark Mode - Show Page Fixes */
+[data-theme="dark"] .liting-card .card-body p {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .liting-card .card-body b,
+[data-theme="dark"] .liting-card .card-body i {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .review-card .card-title {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .review-card .card-text {
+    color: #b0b0b0;
+}
+
+/* Dark Mode - Footer */
+[data-theme="dark"] footer {
+    background: rgba(20, 20, 35, 0.95);
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] footer a {
+    color: #ffffff;
+}
+
+/* Dark Mode - Buttons */
+[data-theme="dark"] .btn-outline-dark {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+[data-theme="dark"] .btn-outline-dark:hover {
+    background: #ffffff;
+    color: #1a1a2e;
+}
+
+@media (max-width: 576px) {
+    .new-listing-card {
+        padding: 1.5rem;
+        border-radius: 24px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
     }
 }
