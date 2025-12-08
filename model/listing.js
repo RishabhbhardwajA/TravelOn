@@ -41,38 +41,39 @@ const ListingSchema = new Schema({
     required: true,
   },
 
-  review:[{
-    type:Schema.Types.ObjectId,
-    ref:"Review"},],
+  review: [{
+    type: Schema.Types.ObjectId,
+    ref: "Review"
+  },],
 
-   owner:{
-    type:Schema.Types.ObjectId,
-    ref:"User"
-   } ,
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User"
+  },
 
-   geometry: {
-        type: {
-            type: String, 
-            enum: ['Point'], 
-            required: true
-        },
-    coordinates: {
-            type: [Number],
-            required: true
-        }
+  geometry: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
     },
-    category: {
-        type: String,
-        enum: ["Trending", "Rooms", "Iconic", "Mountains", "Castles", "Pools", "Camping", "Farms", "Arctic", "Domes", "Boats"]
+    coordinates: {
+      type: [Number],
+      default: [0, 0]
     }
+  },
+  category: {
+    type: String,
+    enum: ["Trending", "Rooms", "Iconic", "Mountains", "Castles", "Pools", "Camping", "Farms", "Arctic", "Domes", "Boats"]
+  }
 
-  
+
 });
 
-ListingSchema.post("findOneAndDelete",async(listing)=>{
-  if(listing){
-       await Review.deleteMany({_id:{$in:listing.review}});
-      }
+ListingSchema.post("findOneAndDelete", async (listing) => {
+  if (listing) {
+    await Review.deleteMany({ _id: { $in: listing.review } });
+  }
 })
 
 module.exports = mongoose.model("Listing", ListingSchema);

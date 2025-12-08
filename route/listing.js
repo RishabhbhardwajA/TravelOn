@@ -28,8 +28,8 @@ router.route("/")
     .get(wrapAsync(listingsRoute))
     .post(
         isLoggedIn,
-        normalizeListing,
         upload.single('listing[image]'),
+        normalizeListing,
         validateListing,
         wrapAsync(createListing)
     );
@@ -55,8 +55,8 @@ router.route("/:id")
     .put(
         isLoggedIn,
         isOwner,
-        normalizeListing,
         upload.single('listing[image]'),
+        normalizeListing,
         validateListing,
         wrapAsync(updateRoute)
     )

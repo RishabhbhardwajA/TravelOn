@@ -64,28 +64,45 @@ module.exports.newListing = (req, res) => {
 };
 
 module.exports.createListing = async (req, res, next) => {
-  let response = await axios.get(`https://nominatim.openstreetmap.org/search?q=${req.body.listing.location}&format=json&limit=1`);
-  let lat, lon;
-  if (response.data.length > 0) {
-    lat = response.data[0].lat;
-    lon = response.data[0].lon;
+  try {
+    // Check if file was uploaded
+    if (!req.file) {
+      req.flash("error", "Please upload an image");
+      return res.redirect("/listings/new");
+    }
+
+    let lat = 0, lon = 0;
+    try {
+      let response = await axios.get(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(req.body.listing.location)}&format=json&limit=1`);
+      if (response.data.length > 0) {
+        lat = parseFloat(response.data[0].lat);
+        lon = parseFloat(response.data[0].lon);
+      }
+    } catch (geoError) {
+      console.log("Geocoding failed:", geoError.message);
+      // Continue with default coordinates
+    }
+
+    let url = req.file.path;
+    let filename = req.file.filename;
+
+    const newListing = new Listing(req.body.listing);
+    newListing.owner = req.user._id;
+    newListing.image = { url, filename };
+
+    newListing.geometry = {
+      type: 'Point',
+      coordinates: [lon, lat]
+    };
+
+    await newListing.save();
+
+    req.flash("success", "New Listing Created!");
+    res.redirect("/listings");
+  } catch (err) {
+    console.error("Create listing error:", err);
+    next(err);
   }
-  let url = req.file.path;
-  let filename = req.file.filename;
-
-  const newListing = new Listing(req.body.listing);
-  newListing.owner = req.user._id;
-  newListing.image = { url, filename };
-
-  newListing.geometry = {
-    type: 'Point',
-    coordinates: [lon, lat]
-  };
-
-  await newListing.save();
-
-  req.flash("success", "New Listing Created!");
-  res.redirect("/listings");
 };
 
 module.exports.editRoute = async (req, res) => {
