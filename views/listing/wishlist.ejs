@@ -1,0 +1,110 @@
+<% layout("/layout/boilerplate")%>
+
+    <div class="wishlist-container">
+        <div class="wishlist-header">
+            <h1><i class="fas fa-heart"></i> My Wishlist</h1>
+            <p>
+                <%= wishlist.length %> saved listings
+            </p>
+        </div>
+
+        <% if(wishlist.length===0) { %>
+            <div class="empty-wishlist">
+                <i class="far fa-heart-broken"></i>
+                <h3>Your wishlist is empty</h3>
+                <p>Start exploring and save your favorite stays!</p>
+                <a href="/listings" class="btn btn-primary">Explore Listings</a>
+            </div>
+            <% } else { %>
+                <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4">
+                    <% for(let listing of wishlist) { %>
+                        <div class="col listing-card">
+                            <a href="/listings/<%= listing._id %>" class="listing-link">
+                                <div class="card-img-container">
+                                    <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>">
+                                    <button class="wishlist-heart wishlisted" data-listing-id="<%= listing._id %>"
+                                        title="Remove from wishlist">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <b>
+                                            <%= listing.title %>
+                                        </b> <br>
+                                        &#8377;<%= listing.price.toLocaleString("en-IN") %> / night<br>
+                                            <span class="text-muted">
+                                                <%= listing.location %>, <%= listing.country %>
+                                            </span>
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                        <% } %>
+                </div>
+                <% } %>
+    </div>
+
+    <style>
+        .wishlist-container {
+            padding: 2rem 0;
+        }
+
+        .wishlist-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .wishlist-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .wishlist-header h1 i {
+            margin-right: 0.5rem;
+        }
+
+        .wishlist-header p {
+            color: var(--text-secondary);
+        }
+
+        .empty-wishlist {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--glass-bg);
+            border-radius: 1.5rem;
+            margin: 2rem auto;
+            max-width: 500px;
+        }
+
+        .empty-wishlist i {
+            font-size: 4rem;
+            color: var(--grey-400);
+            margin-bottom: 1rem;
+        }
+
+        .empty-wishlist h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-wishlist p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-wishlist .btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .empty-wishlist .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 56, 92, 0.4);
+        }
+    </style>

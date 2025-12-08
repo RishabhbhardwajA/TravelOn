@@ -1,16 +1,52 @@
-<%if(success && success.length){%>
-    <div class="alert alert-success alert-dismissible fade show col-6 offset-3 mt-3" role="alert">
-    <%=success%>
-    
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="toast-container-wrapper">
+    <% if(success && success.length){ %>
+        <div class="custom-toast toast-success" role="alert">
+            <div class="toast-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="toast-content">
+                <span class="toast-title">Success</span>
+                <span class="toast-message">
+                    <%= success %>
+                </span>
+            </div>
+            <button class="toast-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="toast-progress"></div>
         </div>
-        <% }%>
+        <% } %>
 
-        
-<%if(error && error.length){%>
-    <div class="alert alert-danger alert-dismissible fade show col-6 offset-3 mt-3" role="alert">
-    <%=error%>
-    
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <%}%>
+            <% if(error && error.length){ %>
+                <div class="custom-toast toast-error" role="alert">
+                    <div class="toast-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="toast-content">
+                        <span class="toast-title">Error</span>
+                        <span class="toast-message">
+                            <%= error %>
+                        </span>
+                    </div>
+                    <button class="toast-close" onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="toast-progress"></div>
+                </div>
+                <% } %>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toasts = document.querySelectorAll('.custom-toast');
+        toasts.forEach(toast => {
+            // Auto dismiss after 4 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.5s forwards';
+                setTimeout(() => {
+                    toast.remove();
+                }, 500);
+            }, 4000);
+        });
+    });
+</script>

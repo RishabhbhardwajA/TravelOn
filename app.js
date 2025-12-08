@@ -1,5 +1,5 @@
-if(process.env.NODE_ENV!="production"){
-require('dotenv').config();
+if (process.env.NODE_ENV != "production") {
+  require('dotenv').config();
 }
 
 const express = require("express");
@@ -12,13 +12,14 @@ const ExpressError = require("./error/ExpressError.js");
 const listingsRoute = require("./route/listing.js");
 const reviewRoute = require("./route/review.js");
 const session = require("express-session");
-const MongoStore = require('connect-mongo').default;
-const flash= require("connect-flash");
+const MongoStore = require('connect-mongo');
+const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./model/user.js");
 const Userroute = require("./route/user.js");
-
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
 
 
 
@@ -29,19 +30,32 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // For JSON API requests like wishlist
 app.use(methodOverride("_method"));
-console.log("MERI VALUE YAHAN HAI:", MongoStore);
+
+// Security middleware
+app.use(mongoSanitize()); // Prevents NoSQL injection
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+      imgSrc: ["'self'", "data:", "blob:", "https://res.cloudinary.com", "https://images.unsplash.com", "https://picsum.photos", "https://tile.openstreetmap.org", "https://cdn-icons-png.flaticon.com"],
+      connectSrc: ["'self'", "https://nominatim.openstreetmap.org"],
+      frameSrc: ["'self'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+}));
 
 if (process.env.NODE_ENV === "production") {
   app.set('trust proxy', 1);
-  console.log("✅ Trust proxy enabled for production");
 };
 
 // DATABASE
-const mongoDbUrl= process.env.ATLASDB_URL;
-console.log("🔍 Environment:", process.env.NODE_ENV);
-console.log("🔍 MongoDB URL exists:", !!mongoDbUrl);
-console.log("🔍 SECRET exists:", !!process.env.SECRET);
+const mongoDbUrl = process.env.ATLASDB_URL;
 async function main() {
   await mongoose.connect(mongoDbUrl);
 }
@@ -51,29 +65,24 @@ main()
 
 
 
-const  store= MongoStore.create({
-  mongoUrl:mongoDbUrl, 
-  crypto:{
-    secret: process.env.SECRET ,
-  },
-  touchAfter:24*3600,
+const store = MongoStore.create({
+  mongoUrl: mongoDbUrl,
+  touchAfter: 24 * 3600,
+  collectionName: 'sessions'
 });
 
-store.on("error",(err)=>{
-  console.log("ERROR IN MONGO_SESSION STORE",err);
+store.on("error", (err) => {
+  console.error("Session Store Error:", err);
 });
-console.log("✅ MongoStore created");
+
 const sessionOptions = {
   store,
-  secret: process.env.SECRET ,
+  secret: process.env.SECRET,
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    httpOnly: true, 
-  secure: process.env.NODE_ENV === "production", 
-  sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax' 
+    httpOnly: true,
   },
 };
 
@@ -89,25 +98,19 @@ app.use(passport.session());
 passport.use(new LocalStrategy(
   async (username, password, done) => {
     try {
-      
       const user = await User.findOne({ username: username });
       if (!user) {
-        console.log("User not found in DB");
         return done(null, false, { message: "User not found" });
       }
-      
-      console.log("User found, checking password...");
+
       const result = await user.authenticate(password);
-      
+
       if (result.user) {
-        console.log("Password matched!");
         return done(null, result.user);
       } else {
-        console.log("Password wrong!");
         return done(null, false, { message: "Incorrect password" });
       }
     } catch (err) {
-      console.log("Error in strategy:", err);
       return done(err);
     }
   }
@@ -115,24 +118,25 @@ passport.use(new LocalStrategy(
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use((req,res,next)=>{
-    res.locals.success = req.flash("success");
-    res.locals.error = req.flash("error");
-    res.locals.currUser = req.user;
-    next();
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  res.locals.currUser = req.user;
+  res.locals.baseUrl = "https://wanderlust-risha.onrender.com"; // Fallback URL or use process.env
+  next();
 });
 
-app.get("/listings/search",(req,res)=>{
-    console.log("working");
-}); 
+app.get("/listings/search", (req, res) => {
+  res.redirect("/listings");
+});
 
 app.get("/", (req, res) => {
   res.redirect("/listings");
-}); 
+});
 
-app.use("/",Userroute);
-app.use("/listings",listingsRoute);
-app.use("/listings/:id/review",reviewRoute);
+app.use("/", Userroute);
+app.use("/listings", listingsRoute);
+app.use("/listings/:id/review", reviewRoute);
 
 
 // Fix favicon request
@@ -143,8 +147,7 @@ app.get("/favicon.ico", (req, res) => res.status(204).end());
 
 // Unknown route
 app.all(/.*/, (req, res, next) => {
-  console.log("Invalid hit:", req.method, req.url);
-  next(new ExpressError(405, "Invalid Route"));
+  next(new ExpressError(404, "Page Not Found"));
 });
 
 

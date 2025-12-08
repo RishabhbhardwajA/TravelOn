@@ -4,14 +4,16 @@ const wrapAsync = require("../error/wrapAsync.js");
 const { isLoggedIn, isOwner, validateListing, normalizeListing } = require("../middleware.js");
 
 // Controller Imports
-const { 
-    listingsRoute, 
-    newListing, 
-    createListing, 
-    editRoute, 
-    updateRoute, 
-    showListings, 
-    deleteRoute 
+const {
+    listingsRoute,
+    newListing,
+    createListing,
+    editRoute,
+    updateRoute,
+    showListings,
+    deleteRoute,
+    toggleWishlist,
+    getWishlist
 } = require("../controller/listings.js");
 
 const multer = require('multer');
@@ -25,12 +27,16 @@ const upload = multer({ storage });
 router.route("/")
     .get(wrapAsync(listingsRoute))
     .post(
-        isLoggedIn, 
-        normalizeListing, 
+        isLoggedIn,
+        normalizeListing,
         upload.single('listing[image]'),
-        validateListing, 
+        validateListing,
         wrapAsync(createListing)
     );
+
+// Wishlist routes
+router.get("/wishlist", isLoggedIn, wrapAsync(getWishlist));
+router.post("/:id/wishlist", isLoggedIn, wrapAsync(toggleWishlist));
 
 // ---------------------------------------------
 // 2. NEW ROUTE (CRITICAL: Ye /:id se PEHLE aana chahiye)
@@ -46,12 +52,12 @@ router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(editRoute));
 
 router.route("/:id")
     .get(wrapAsync(showListings)) // Show route
-    .put( 
-        isLoggedIn, 
-        isOwner, 
-        normalizeListing, 
+    .put(
+        isLoggedIn,
+        isOwner,
+        normalizeListing,
         upload.single('listing[image]'),
-        validateListing, 
+        validateListing,
         wrapAsync(updateRoute)
     )
     .delete(isLoggedIn, isOwner, wrapAsync(deleteRoute));
