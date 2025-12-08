@@ -43,7 +43,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
       imgSrc: ["'self'", "data:", "blob:", "https://res.cloudinary.com", "https://images.unsplash.com", "https://picsum.photos", "https://tile.openstreetmap.org", "https://cdn-icons-png.flaticon.com"],
-      connectSrc: ["'self'", "https://nominatim.openstreetmap.org"],
+      connectSrc: ["'self'", "https://nominatim.openstreetmap.org", "https://api.cloudinary.com", "https://*.cloudinary.com"],
       frameSrc: ["'self'"],
     },
   },
