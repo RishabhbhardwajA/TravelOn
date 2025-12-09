@@ -32,15 +32,27 @@
                         <div class="invalid-feedback">Enter a valid country</div>
                     </div>
                     <div class="mb-3 col-md-8">
-                        <label for="category" class="form-label">Category:</label>
-                        <select name="listing[category]" class="form-control" required>
-                            <option value="">Select a category</option>
-                            <% for(let cat of category) { %>
-                                <option value="<%= cat.value %>" <%=listing.category===cat.value ? 'selected' : '' %>>
-                                    <%= cat.label %>
-                                </option>
-                                <% } %>
-                        </select>
+                        <label class="form-label">Category:</label>
+                        <input type="hidden" name="listing[category]" id="categoryInput" value="<%= listing.category %>"
+                            required>
+                        <div class="custom-select-wrapper">
+                            <div class="custom-select" id="categorySelect">
+                                <span class="selected-text">
+                                    <%= listing.category || 'Select a category' %>
+                                </span>
+                                <i class="fas fa-chevron-down arrow"></i>
+                            </div>
+                            <div class="custom-options" id="categoryOptions">
+                                <% for(let cat of category) { %>
+                                    <div class="custom-option <%= listing.category === cat ? 'selected' : '' %>"
+                                        data-value="<%= cat %>">
+                                        <i class="fas fa-check check-icon"></i>
+                                        <%= cat %>
+                                    </div>
+                                    <% } %>
+                            </div>
+                        </div>
+                        <div class="invalid-feedback">Please select a category</div>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -62,3 +74,49 @@
             </div>
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectBox = document.getElementById('categorySelect');
+            const optionsBox = document.getElementById('categoryOptions');
+            const hiddenInput = document.getElementById('categoryInput');
+            const selectedText = selectBox.querySelector('.selected-text');
+            const options = document.querySelectorAll('.custom-option');
+
+            if (selectBox && optionsBox) {
+                // Toggle dropdown
+                selectBox.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    selectBox.classList.toggle('active');
+                    optionsBox.classList.toggle('show');
+                });
+
+                // Select option
+                options.forEach(option => {
+                    option.addEventListener('click', function () {
+                        const value = this.dataset.value;
+
+                        // Update hidden input
+                        hiddenInput.value = value;
+
+                        // Update selected text
+                        selectedText.textContent = value;
+
+                        // Update selected state
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+
+                        // Close dropdown
+                        selectBox.classList.remove('active');
+                        optionsBox.classList.remove('show');
+                    });
+                });
+
+                // Close on outside click
+                document.addEventListener('click', function () {
+                    selectBox.classList.remove('active');
+                    optionsBox.classList.remove('show');
+                });
+            }
+        });
+    </script>

@@ -190,11 +190,30 @@
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
 
-    <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
+    <!-- Mobile Header (Logo + Search + Toggler) -->
+    <div class="d-flex w-100 align-items-center d-md-none">
+      <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <!-- Mobile Search Bar -->
+      <form class="d-flex flex-grow-1 mx-2 align-items-center mobile-search-bar" role="search" action="/listings"
+        method="GET" style="min-width: 0;">
+        <div class="input-group">
+          <input class="form-control shadow-none border-end-0" type="search" placeholder="Search..." name="q"
+            style="height: 38px; border-radius: 20px 0 0 20px; font-size: 0.9rem; padding-left: 12px; background: rgba(255,255,255,0.9);">
+          <button class="btn border border-start-0" type="submit"
+            style="height: 38px; border-radius: 0 20px 20px 0; background: white; border-color: #ced4da;">
+            <i class="fa-solid fa-magnifying-glass text-secondary" style="font-size: 0.9rem;"></i>
+          </button>
+        </div>
+      </form>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+
+    <!-- Desktop Brand (Hidden on mobile) -->
+    <a class="navbar-brand d-none d-md-block" href="/listings"><i class="fa-regular fa-compass"></i></a>
 
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
@@ -202,7 +221,7 @@
       </div>
 
       <div class="navbar-nav ms-auto">
-        <form class="d-flex" role="search" action="/listings" method="GET">
+        <form class="d-none d-md-flex" role="search" action="/listings" method="GET">
           <input class="form-control me-2 search-input" type="search" placeholder="Search destinations" name="q">
           <button class="btn btn-search" type="submit">
             <i class="fa-solid fa-magnifying-glass"></i>Search
@@ -261,5 +280,7 @@
       </div>
 
     </div>
+
+
   </div>
 </nav>
