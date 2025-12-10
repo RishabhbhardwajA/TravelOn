@@ -2,6 +2,7 @@ const Listing = require("../model/listing.js");
 const User = require("../model/user.js");
 const axios = require('axios');
 const CATEGORIES = ["Trending", "Rooms", "Iconic", "Mountains", "Castles", "Pools", "Camping", "Farms", "Arctic", "Domes", "Boats"];
+const ITEMS_PER_PAGE = 12;
 
 module.exports.listingsRoute = async (req, res) => {
   const { q, category, minPrice, maxPrice } = req.query;
@@ -30,7 +31,15 @@ module.exports.listingsRoute = async (req, res) => {
     if (maxPrice) query.price.$lte = Number(maxPrice);
   }
 
-  let list = await Listing.find(query).populate('review');
+  // Get first page of listings with pagination
+  let list = await Listing.find(query)
+    .populate('review')
+    .limit(ITEMS_PER_PAGE)
+    .sort({ _id: -1 });
+
+  // Get total count for pagination
+  const totalListings = await Listing.countDocuments(query);
+  const hasMore = totalListings > ITEMS_PER_PAGE;
 
   // Calculate average rating for each listing
   list = list.map(listing => {
@@ -56,7 +65,88 @@ module.exports.listingsRoute = async (req, res) => {
     return res.redirect("/listings");
   }
 
-  res.render("listing/index.ejs", { list, category: CATEGORIES, userWishlist, fullWidth: true });
+  res.render("listing/index.ejs", {
+    list,
+    category: CATEGORIES,
+    userWishlist,
+    fullWidth: true,
+    hasMore,
+    totalListings
+  });
+};
+
+// API endpoint for infinite scroll
+module.exports.listingsAPI = async (req, res) => {
+  try {
+    const { q, category, minPrice, maxPrice, page = 1 } = req.query;
+    const skip = (parseInt(page) - 1) * ITEMS_PER_PAGE;
+
+    let query = {};
+
+    // Search query
+    if (q) {
+      query.$or = [
+        { title: { $regex: q, $options: "i" } },
+        { location: { $regex: q, $options: "i" } },
+        { country: { $regex: q, $options: "i" } },
+        { category: { $regex: q, $options: "i" } },
+      ];
+    }
+
+    // Category filter
+    if (category) {
+      query.category = category;
+    }
+
+    // Price filter
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+
+    // Get listings with pagination
+    let listings = await Listing.find(query)
+      .populate('review')
+      .skip(skip)
+      .limit(ITEMS_PER_PAGE)
+      .sort({ _id: -1 });
+
+    // Get total count
+    const totalListings = await Listing.countDocuments(query);
+    const hasMore = skip + listings.length < totalListings;
+
+    // Calculate average rating
+    listings = listings.map(listing => {
+      const listingObj = listing.toObject();
+      if (listing.review && listing.review.length > 0) {
+        const totalRating = listing.review.reduce((sum, r) => sum + (r.rating || 0), 0);
+        listingObj.avgRating = (totalRating / listing.review.length).toFixed(1);
+      } else {
+        listingObj.avgRating = 0;
+      }
+      return listingObj;
+    });
+
+    // Get user's wishlist
+    let userWishlist = [];
+    if (req.user) {
+      const user = await User.findById(req.user._id);
+      userWishlist = user.wishlist.map(id => id.toString());
+    }
+
+    res.json({
+      success: true,
+      listings,
+      hasMore,
+      page: parseInt(page),
+      totalListings,
+      userWishlist
+    });
+  } catch (err) {
+    console.error("Listings API error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
 };
 
 module.exports.newListing = (req, res) => {
@@ -71,29 +161,12 @@ module.exports.createListing = async (req, res, next) => {
       return res.redirect("/listings/new");
     }
 
-    let lat = 0, lon = 0;
-    try {
-      let response = await axios.get(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(req.body.listing.location)}&format=json&limit=1`);
-      if (response.data.length > 0) {
-        lat = parseFloat(response.data[0].lat);
-        lon = parseFloat(response.data[0].lon);
-      }
-    } catch (geoError) {
-      console.log("Geocoding failed:", geoError.message);
-      // Continue with default coordinates
-    }
-
     let url = req.file.path;
     let filename = req.file.filename;
 
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
     newListing.image = { url, filename };
-
-    newListing.geometry = {
-      type: 'Point',
-      coordinates: [lon, lat]
-    };
 
     await newListing.save();
 
@@ -162,7 +235,7 @@ module.exports.showListings = async (req, res) => {
     isWishlisted = user.wishlist.some(item => item.toString() === id);
   }
 
-  res.render("listing/show.ejs", { listing, avgRating, isWishlisted, mapToken: process.env.MAP_TOKEN });
+  res.render("listing/show.ejs", { listing, avgRating, isWishlisted });
 };
 
 module.exports.deleteRoute = async (req, res) => {
@@ -174,24 +247,51 @@ module.exports.deleteRoute = async (req, res) => {
 
 // Wishlist toggle
 module.exports.toggleWishlist = async (req, res) => {
-  const { id } = req.params;
-  const user = await User.findById(req.user._id);
+  try {
+    // 1) User login check
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Login required" });
+    }
 
-  // Ensure comparison logic handles ObjectIds correctly
-  const listId = id.toString();
-  const index = user.wishlist.findIndex(item => item.toString() === listId);
-  let action;
+    const { id } = req.params;
 
-  if (index === -1) {
-    user.wishlist.push(id);
-    action = "added";
-  } else {
-    user.wishlist.pull(id); // Use Mongoose pull for cleaner removal
-    action = "removed";
+    // 2) User find
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // 3) Agar wishlist undefined hai to array bana do
+    if (!Array.isArray(user.wishlist)) {
+      user.wishlist = [];
+    }
+
+    const listId = id.toString();
+    const index = user.wishlist.findIndex(item => item.toString() === listId);
+
+    let action;
+    if (index === -1) {
+      // add
+      user.wishlist.push(id);
+      action = "added";
+    } else {
+      // remove
+      user.wishlist.pull(id);
+      action = "removed";
+    }
+
+    await user.save();
+
+    return res.json({
+      success: true,
+      action,
+      wishlistCount: user.wishlist.length,
+    });
+  } catch (err) {
+    console.error("toggleWishlist error:", err);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
-
-  await user.save();
-  res.json({ success: true, action, wishlistCount: user.wishlist.length });
 };
 
 // Get wishlist page

@@ -6,6 +6,7 @@ const { isLoggedIn, isOwner, validateListing, normalizeListing } = require("../m
 // Controller Imports
 const {
     listingsRoute,
+    listingsAPI,
     newListing,
     createListing,
     editRoute,
@@ -33,6 +34,9 @@ router.route("/")
         validateListing,
         wrapAsync(createListing)
     );
+
+// API route for infinite scroll
+router.get("/api", wrapAsync(listingsAPI));
 
 // Wishlist routes
 router.get("/wishlist", isLoggedIn, wrapAsync(getWishlist));

@@ -110,9 +110,26 @@
 
 
     <div class="container p-0">
-        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3 g-5">
-            <% for(let listing of list){ %>
+        <!-- Skeleton Loading Cards -->
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3 g-5 skeletons-container" id="skeletonContainer">
+            <% for(let i=0; i < 6; i++) { %>
                 <div class="col">
+                    <div class="skeleton-card">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-body">
+                            <div class="skeleton-title"></div>
+                            <div class="skeleton-text"></div>
+                            <div class="skeleton-price"></div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+        </div>
+
+        <!-- Actual Listings -->
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3 g-5" id="listingsContainer">
+            <% for(let listing of list){ %>
+                <div class="col listing-item">
                     <div class="card listing-card">
                         <a href="/listings/<%= listing._id %>" class="listing-link">
                             <div class="card-img-container">
@@ -156,6 +173,17 @@
                     </div>
                 </div>
                 <% } %>
+        </div>
+
+        <!-- Loading More Indicator -->
+        <div class="loading-more hidden" id="loadingMore">
+            <div class="loading-spinner"></div>
+            <span>Loading more listings...</span>
+        </div>
+
+        <!-- No More Listings Message -->
+        <div class="no-more-listings hidden" id="noMoreListings">
+            <i class="fas fa-check-circle"></i> You've seen all listings!
         </div>
     </div>
 
@@ -407,5 +435,163 @@
                     console.error('Wishlist error:', err);
                 }
             });
+        });
+
+        // ============================================
+        // SKELETON LOADING - Hide when content ready
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function () {
+            const skeletonContainer = document.getElementById('skeletonContainer');
+            const listingsContainer = document.getElementById('listingsContainer');
+
+            // Hide skeletons after small delay (simulate loading)
+            setTimeout(() => {
+                if (skeletonContainer) {
+                    skeletonContainer.classList.add('loaded');
+                }
+            }, 300);
+
+            // ============================================
+            // INFINITE SCROLL - Load more on scroll
+            // ============================================
+            let currentPage = 1;
+            let isLoading = false;
+            let hasMore = JSON.parse('<%= JSON.stringify(typeof hasMore !== "undefined" ? hasMore : false) %>');
+
+            const loadingMore = document.getElementById('loadingMore');
+            const noMoreListings = document.getElementById('noMoreListings');
+
+            // Create card HTML from listing data
+            function createListingCard(listing, userWishlist) {
+                const isWishlisted = userWishlist.includes(listing._id.toString());
+                const wishlistClass = isWishlisted ? 'wishlisted' : '';
+                const heartIcon = isWishlisted ? 'fas' : 'far';
+                const wishlistTitle = isWishlisted ? 'Remove from wishlist' : 'Add to wishlist';
+
+                // Rating display
+                let ratingHTML = '';
+                if (listing.avgRating > 0) {
+                    ratingHTML = `<span class="listing-rating"><i class="fas fa-star"></i> ${listing.avgRating}</span>`;
+                }
+
+                return `
+                    <div class="col listing-item">
+                        <div class="card listing-card">
+                            <a href="/listings/${listing._id}" class="listing-link">
+                                <div class="card-img-container">
+                                    <img src="${listing.image.url}" class="card-img-top" alt="${listing.title}">
+                                    <% if(locals.currUser) { %>
+                                    <button class="wishlist-heart ${wishlistClass}" data-listing-id="${listing._id}" title="${wishlistTitle}">
+                                        <i class="${heartIcon} fa-heart"></i>
+                                    </button>
+                                    <% } %>
+                                </div>
+                            </a>
+                            <div class="card-body">
+                                <a href="/listings/${listing._id}" class="listing-link">
+                                    <p class="card-text">
+                                        <b>${listing.title}</b>
+                                        ${ratingHTML}
+                                        <br>
+                                        &#8377; <span class="listing-price" data-base-price="${listing.price}">${listing.price.toLocaleString('en-IN')}</span> / night
+                                        <i class="tax-info"> &nbsp; +18% GST</i>
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Attach wishlist handlers to new cards
+            function attachWishlistHandlers(container) {
+                container.querySelectorAll('.wishlist-heart:not([data-handler-attached])').forEach(btn => {
+                    btn.setAttribute('data-handler-attached', 'true');
+                    btn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const listingId = btn.dataset.listingId;
+
+                        try {
+                            const response = await fetch(`/listings/${listingId}/wishlist`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' }
+                            });
+                            const data = await response.json();
+                            if (data.success) {
+                                const icon = btn.querySelector('i');
+                                if (data.action === 'added') {
+                                    btn.classList.add('wishlisted');
+                                    icon.classList.remove('far');
+                                    icon.classList.add('fas');
+                                } else {
+                                    btn.classList.remove('wishlisted');
+                                    icon.classList.remove('fas');
+                                    icon.classList.add('far');
+                                }
+                            }
+                        } catch (err) {
+                            console.error('Wishlist error:', err);
+                        }
+                    });
+                });
+            }
+
+            // Load more listings
+            async function loadMoreListings() {
+                if (isLoading || !hasMore) return;
+
+                isLoading = true;
+                loadingMore.classList.remove('hidden');
+                currentPage++;
+
+                // Get current URL params
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('page', currentPage);
+
+                try {
+                    const response = await fetch(`/listings/api?${urlParams.toString()}`);
+                    const data = await response.json();
+
+                    if (data.success && data.listings.length > 0) {
+                        // Append new listings
+                        data.listings.forEach(listing => {
+                            const cardHTML = createListingCard(listing, data.userWishlist);
+                            listingsContainer.insertAdjacentHTML('beforeend', cardHTML);
+                        });
+
+                        // Attach wishlist handlers to new cards
+                        attachWishlistHandlers(listingsContainer);
+
+                        hasMore = data.hasMore;
+                    } else {
+                        hasMore = false;
+                    }
+
+                    if (!hasMore) {
+                        noMoreListings.classList.remove('hidden');
+                    }
+                } catch (err) {
+                    console.error('Error loading more listings:', err);
+                } finally {
+                    isLoading = false;
+                    loadingMore.classList.add('hidden');
+                }
+            }
+
+            // Intersection Observer for infinite scroll
+            if (hasMore && loadingMore) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && hasMore && !isLoading) {
+                            loadMoreListings();
+                        }
+                    });
+                }, { rootMargin: '200px' });
+
+                observer.observe(loadingMore);
+            } else if (!hasMore && noMoreListings) {
+                noMoreListings.classList.remove('hidden');
+            }
         });
     </script>

@@ -51,17 +51,6 @@ const ListingSchema = new Schema({
     ref: "User"
   },
 
-  geometry: {
-    type: {
-      type: String,
-      enum: ['Point'],
-      default: 'Point'
-    },
-    coordinates: {
-      type: [Number],
-      default: [0, 0]
-    }
-  },
   category: {
     type: String,
     enum: ["Trending", "Rooms", "Iconic", "Mountains", "Castles", "Pools", "Camping", "Farms", "Arctic", "Domes", "Boats"]

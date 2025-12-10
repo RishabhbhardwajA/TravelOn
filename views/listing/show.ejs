@@ -14,11 +14,15 @@
                             <span>Save</span>
                         </button>
                         <% } %>
-                            <button class="show-wishlist-btn" onclick="openShareModal()">
+                            <button id="shareBtn" class="show-wishlist-btn">
                                 <i class="fas fa-share-alt"></i>
                                 <span>Share</span>
                             </button>
                 </div>
+            </div>
+            <!-- Weather Widget -->
+            <div id="weather-widget" class="weather-widget mt-2">
+                <i class="fas fa-spinner fa-spin"></i> Loading weather...
             </div>
         </div>
         <div class="card liting-card col-12 col-md-6 offset-md-3">
@@ -106,11 +110,18 @@
                                 </div>
                                 <% } %>
                 </div>
-    </div>
 
-    <div class="col-12 col-md-8 offset-md-3 mb-3 map">
-        <h3>Where you'll be</h3>
-        <div id="map"></div>
+                <!-- Map Section -->
+                <div class="col-12 col-md-8 offset-md-3 mb-3">
+                    <h3>Where you'll be</h3>
+                    <div id="map" class="map-container"></div>
+                </div>
+
+                <script>
+                    const listingLocation = "<%- listing.location %>";
+                    const listingCountry = "<%- listing.country %>";
+                </script>
+                <script src="/js/map.js"></script>
     </div>
     </div>
 
@@ -119,28 +130,25 @@
         <div class="share-modal">
             <div class="share-header">
                 <h3>Share this place</h3>
-                <button class="close-share" onclick="closeShareModal()">
+                <button id="closeShareBtn" class="close-share">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
 
             <div class="share-options">
-                <a href="https://wa.me/?text=Check out this amazing place on TravelOn: <%= baseUrl %>/listings/<%= listing._id %>"
-                    target="_blank" class="share-btn whatsapp">
+                <a id="whatsappShare" href="#" target="_blank" class="share-btn whatsapp">
                     <i class="fab fa-whatsapp"></i>
                     <span>WhatsApp</span>
                 </a>
-                <a href="https://www.facebook.com/sharer/sharer.php?u=<%= baseUrl %>/listings/<%= listing._id %>"
-                    target="_blank" class="share-btn facebook">
+                <a id="facebookShare" href="#" target="_blank" class="share-btn facebook">
                     <i class="fab fa-facebook"></i>
                     <span>Facebook</span>
                 </a>
-                <a href="https://twitter.com/intent/tweet?text=Check out this amazing place!&url=<%= baseUrl %>/listings/<%= listing._id %>"
-                    target="_blank" class="share-btn twitter">
+                <a id="twitterShare" href="#" target="_blank" class="share-btn twitter">
                     <i class="fab fa-twitter"></i>
                     <span>Twitter</span>
                 </a>
-                <div class="share-btn copy" onclick="copyLink()">
+                <div id="copyLinkBtn" class="share-btn copy">
                     <i class="far fa-copy"></i>
                     <span>Copy Link</span>
                 </div>
@@ -149,13 +157,21 @@
     </div>
 
     <script>
-        const mapToken = "<%= process.env.MAP_TOKEN %>";
-        const listing = <% - JSON.stringify(listing) %>;
-
         // Share Modal Logic
         function openShareModal() {
-            document.getElementById('shareModal').classList.add('active');
+            const modal = document.getElementById('shareModal');
+            if (!modal) return;
+
+            modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            // Update share links with current URL
+            const currentUrl = encodeURIComponent(window.location.href);
+            const shareText = encodeURIComponent("Check out this amazing place on TravelOn!");
+
+            document.getElementById('whatsappShare').href = `https://wa.me/?text=${shareText}%20${currentUrl}`;
+            document.getElementById('facebookShare').href = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
+            document.getElementById('twitterShare').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${currentUrl}`;
         }
 
         function closeShareModal() {
@@ -182,38 +198,65 @@
 
         // Wishlist Logic
         document.addEventListener('DOMContentLoaded', function () {
-            const wishlistBtn = document.getElementById('saveWishlistBtn');
-            if (wishlistBtn) {
-                wishlistBtn.addEventListener('click', async function (e) {
-                    e.preventDefault();
-                    const listingId = this.dataset.listingId;
-                    try {
-                        const response = await fetch(`/listings/${listingId}/wishlist`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' }
-                        });
-                        const data = await response.json();
-                        if (data.success) {
-                            const icon = this.querySelector('i');
-                            const text = this.querySelector('span');
-                            if (data.action === 'added') {
-                                this.classList.add('wishlisted');
-                                icon.classList.remove('far');
-                                icon.classList.add('fas');
-                                text.innerText = 'Saved';
-                            } else {
-                                this.classList.remove('wishlisted');
-                                icon.classList.remove('fas');
-                                icon.classList.add('far');
-                                text.innerText = 'Save';
-                            }
-                        }
-                    } catch (err) {
-                        console.error('Wishlist error:', err);
-                    }
-                });
+            // Share Button Event Listeners
+            const shareBtn = document.getElementById('shareBtn');
+            const closeShareBtn = document.getElementById('closeShareBtn');
+            const copyLinkBtn = document.getElementById('copyLinkBtn');
+
+            if (shareBtn) {
+                shareBtn.addEventListener('click', openShareModal);
             }
+
+            if (closeShareBtn) {
+                closeShareBtn.addEventListener('click', closeShareModal);
+            }
+
+            if (copyLinkBtn) {
+                copyLinkBtn.addEventListener('click', copyLink);
+            }
+
+            // Wishlist Button
+            const wishlistBtn = document.getElementById('saveWishlistBtn');
+
+            if (!wishlistBtn) {
+                return;
+            }
+
+            wishlistBtn.addEventListener('click', async function (e) {
+                e.preventDefault();
+                const listingId = this.dataset.listingId;
+
+                try {
+                    const res = await fetch(`/listings/${listingId}/wishlist`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+
+                    const data = await res.json();
+
+                    if (!data.success) {
+                        alert(data.message || "Wishlist error");
+                        return;
+                    }
+
+                    const icon = this.querySelector('i');
+                    const text = this.querySelector('span');
+
+                    if (data.action === 'added') {
+                        this.classList.add('wishlisted');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        text.innerText = 'Saved';
+                    } else {
+                        this.classList.remove('wishlisted');
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        text.innerText = 'Save';
+                    }
+                } catch (err) {
+                    console.error("Wishlist error:", err);
+                    alert("Wishlist request failed");
+                }
+            });
         });
     </script>
-
-    <script src="/js/map.js"></script>

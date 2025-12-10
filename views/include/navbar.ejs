@@ -221,8 +221,15 @@
       </div>
 
       <div class="navbar-nav ms-auto">
-        <form class="d-none d-md-flex" role="search" action="/listings" method="GET">
-          <input class="form-control me-2 search-input" type="search" placeholder="Search destinations" name="q">
+        <form class="d-none d-md-flex align-items-center" role="search" action="/listings" method="GET">
+          <div class="position-relative me-2 flex-grow-1">
+            <input class="form-control search-input pe-5" id="desktopSearchInput" type="search"
+              placeholder="Search destinations" name="q">
+            <button type="button" class="voice-search-btn desktop-voice-btn" id="desktopVoiceBtn"
+              title="Search by Voice">
+              <i class="fas fa-microphone"></i>
+            </button>
+          </div>
           <button class="btn btn-search" type="submit">
             <i class="fa-solid fa-magnifying-glass"></i>Search
           </button>
@@ -230,6 +237,11 @@
       </div>
 
       <div class="navbar-nav ms-auto">
+        <!-- Dark Mode Toggle -->
+        <a class="nav-link me-3" id="navDarkModeToggle" href="#" title="Toggle Dark Mode">
+          <i class="fas fa-moon"></i>
+        </a>
+
         <a class="nav-link" href="/listings/new">New listing</a>
 
         <% if(typeof currUser==='undefined' || !currUser) { %>
