@@ -1,21 +1,294 @@
-<footer>
-    <div class="f-info">
-        <div class="f-info-media">
-            <a href="https://www.instagram.com/__rishabhardwaj__/" target="_blank" rel="noopener noreferrer"><i
-                    class="fa-brands fa-instagram"></i></a>
-            <a href="https://www.linkedin.com/in/rishabh-sharma-312854355" target="_blank" rel="noopener noreferrer"><i
-                    class="fa-brands fa-linkedin"></i></a>
-            <a href="#"><i class="fa-brands fa-twitter"></i></a>
-            <a href="#"><i class="fa-brands fa-facebook"></i></a>
-            <a href="#"><i class="fa-brands fa-youtube"></i></a>
-        </div>
-        <div class="f-info-brand">&copy TravelOn Pvt Ltd</div>
-        <div class="f-info-links">
-            <a href="/privacy">Privacy</a>
-            <a href="/terms">Terms</a>
-        </div>
-
+<footer class="premium-footer">
+    <!-- Decorative top wave -->
+    <div class="footer-wave">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path
+                d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+                fill="currentColor"></path>
+        </svg>
     </div>
 
+    <div class="footer-content">
+        <div class="footer-grid">
+            <!-- Brand Section -->
+            <div class="footer-brand-section">
+                <div class="footer-logo">
+                    <img src="/images/logo.png" alt="TravelOn" class="footer-logo-img">
+                </div>
+                <p class="footer-tagline">Discover extraordinary places to stay around the world. Your next adventure
+                    awaits.</p>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com/__rishabhardwaj__/" target="_blank" rel="noopener noreferrer"
+                        class="social-link instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/rishabh-sharma-312854355" target="_blank"
+                        rel="noopener noreferrer" class="social-link linkedin">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="social-link twitter">
+                        <i class="fa-brands fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-link facebook">
+                        <i class="fa-brands fa-facebook"></i>
+                    </a>
+                    <a href="#" class="social-link youtube">
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
 
+            <!-- Quick Links -->
+            <div class="footer-links-section">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="/listings">All Listings</a></li>
+                    <li><a href="/listings?category=Trending">Trending</a></li>
+                    <li><a href="/listings?category=Mountains">Mountains</a></li>
+                    <li><a href="/listings?category=Pools">With Pool</a></li>
+                </ul>
+            </div>
+
+            <!-- Support Links -->
+            <div class="footer-links-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="/help">Help Center</a></li>
+                    <li><a href="/safety">Safety Info</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="/faq">FAQs</a></li>
+                </ul>
+            </div>
+
+            <!-- Legal Links -->
+            <div class="footer-links-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/cookies">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="footer-bottom">
+            <p>&copy; 2026 TravelOn Pvt Ltd. All rights reserved.</p>
+            <p class="footer-credit">Made with <i class="fas fa-heart"></i> by Rishabh</p>
+        </div>
+    </div>
 </footer>
+
+<style>
+    /* ============================================
+       � OCEAN BREEZE FOOTER - Fresh Blue
+       ============================================ */
+
+    .premium-footer {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(59, 130, 246, 0.15);
+        position: relative;
+        margin-top: auto;
+    }
+
+    .footer-wave {
+        position: absolute;
+        top: -60px;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .footer-wave svg {
+        display: block;
+        width: 100%;
+        height: 60px;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem 1.5rem;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 2rem;
+    }
+
+    .footer-brand-section {
+        max-width: 300px;
+    }
+
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .footer-logo-img {
+        height: 70px;
+        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        filter: brightness(1.1);
+    }
+
+    .footer-logo-img:hover {
+        transform: rotate(720deg);
+    }
+
+    .footer-tagline {
+        color: #64748B;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+    }
+
+    .footer-social {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .social-link {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(59, 130, 246, 0.1);
+        color: #64748B;
+        font-size: 1.1rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .social-link:hover {
+        transform: translateY(-4px) scale(1.1);
+        color: white;
+        background: #3B82F6;
+        box-shadow: 0 8px 25px rgba(77, 163, 255, 0.35);
+    }
+
+    .social-link.instagram:hover {
+        background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        box-shadow: 0 8px 20px rgba(225, 48, 108, 0.4);
+    }
+
+    .social-link.linkedin:hover {
+        background: #0077B5;
+        box-shadow: 0 8px 20px rgba(0, 119, 181, 0.4);
+    }
+
+    .social-link.twitter:hover {
+        background: #1DA1F2;
+        box-shadow: 0 8px 20px rgba(29, 161, 242, 0.4);
+    }
+
+    .social-link.facebook:hover {
+        background: #1877F2;
+        box-shadow: 0 8px 20px rgba(24, 119, 242, 0.4);
+    }
+
+    .social-link.youtube:hover {
+        background: #FF0000;
+        box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+    }
+
+    .footer-links-section h4 {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        color: #E6EDF3;
+    }
+
+    .footer-links-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-links-section li {
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-links-section a {
+        color: #64748B;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .footer-links-section a:hover {
+        color: #3B82F6;
+        transform: translateX(5px);
+    }
+
+    .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(59, 130, 246, 0.15);
+    }
+
+    .footer-bottom p {
+        color: #64748B;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .footer-credit i {
+        color: #EC4899;
+        animation: heartbeat 1.5s ease infinite;
+    }
+
+    @keyframes heartbeat {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.2);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .footer-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .footer-brand-section {
+            grid-column: span 2;
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .footer-brand-section {
+            grid-column: span 1;
+        }
+
+        .footer-bottom {
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: center;
+        }
+    }
+</style>

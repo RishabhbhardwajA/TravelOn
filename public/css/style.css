@@ -1,53 +1,102 @@
 /* ============================================
-   🎨 WANDERLUST PREMIUM UI v2.0
-   Aesthetic Design + Dark Mode + Interactive
+   🌊 TRAVELON OCEAN BREEZE v5.0
+   Fresh Blue Theme - Modern & Clean
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
+/* Premium Font - Poppins for Fresh Modern Look */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-/* CSS Variables - Light Mode */
+/* ============================================
+   🎨 BEAUTIFUL OCEAN BLUE PALETTE
+   ============================================ */
 :root {
-    --primary: #FF385C;
-    --primary-dark: #E31C5F;
-    --secondary: #00A699;
-    --accent: #7C3AED;
-    --dark: #1A1A1A;
-    --grey-900: #484848;
-    --grey-700: #717171;
-    --grey-500: #B0B0B0;
-    --grey-100: #F7F7F7;
+    /* Primary Blue Shades */
+    --primary: #3B82F6;
+    /* Vibrant Sky Blue */
+    --primary-dark: #2563EB;
+    /* Deep Blue */
+    --primary-light: #60A5FA;
+    /* Light Blue */
+    --primary-glow: rgba(59, 130, 246, 0.35);
+
+    /* Accent Colors */
+    --secondary: #06B6D4;
+    /* Cyan/Teal */
+    --accent: #8B5CF6;
+    /* Purple accent */
+    --accent-pink: #EC4899;
+    /* Pink for hearts */
+
+    /* Text Colors - Dark on Light */
+    --text-primary: #1E293B;
+    /* Dark Slate */
+    --text-secondary: #64748B;
+    /* Medium Gray */
+    --text-muted: #94A3B8;
+    /* Light Gray */
+
+    /* Beautiful Light Background */
+    --bg-gradient: linear-gradient(135deg,
+            #E0F2FE 0%,
+            /* Light Sky Blue */
+            #BAE6FD 25%,
+            /* Pale Cyan */
+            #E0F2FE 50%,
+            /* Light Sky Blue */
+            #F0F9FF 100%);
+    /* Almost White Blue */
+
+    /* Card & Glass Effects */
     --white: #FFFFFF;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-bg-light: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(59, 130, 246, 0.2);
+    --glass-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
 
-    /* Aesthetic Gradient Background */
-    --bg-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ffecd2 100%);
+    /* Multi-Layer Shadows */
+    --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-soft: 0 4px 20px rgba(59, 130, 246, 0.12);
+    --shadow-medium: 0 10px 40px rgba(59, 130, 246, 0.18);
+    --shadow-hover: 0 20px 50px rgba(59, 130, 246, 0.25);
+    --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.3);
 
-    /* Glass Effect */
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --glass-border: rgba(255, 255, 255, 0.4);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-
-    /* Shadows */
-    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
-    --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
-
-    /* Transitions */
+    /* Premium Transitions */
     --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-bounce: cubic-bezier(0.68, -0.35, 0.265, 1.35);
+    --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --transition-fast: 0.2s var(--ease-smooth);
+    --transition-normal: 0.3s var(--ease-smooth);
+    --transition-slow: 0.5s var(--ease-smooth);
 
-    /* Text */
-    --text-primary: #1A1A1A;
-    --text-secondary: #717171;
-    --card-bg: #ffffff;
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --radius-full: 9999px;
+
+    /* Legacy Compatibility */
+    --grey-100: #F1F5F9;
+    --grey-300: #CBD5E1;
+    --grey-500: #64748B;
+    --grey-700: #334155;
+    --grey-900: #0F172A;
+    --dark: #1E293B;
+    --card-bg: #FFFFFF;
 }
 
 /* Dark Mode Variables */
 [data-theme="dark"] {
-    --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    --glass-bg: rgba(40, 40, 60, 0.95);
-    --glass-border: rgba(255, 255, 255, 0.15);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    --white: #1A1A2E;
-    --grey-100: #2A2A3E;
+    --bg-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    --bg-gradient-subtle: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+
+    --glass-bg: rgba(30, 30, 50, 0.9);
+    --glass-bg-light: rgba(40, 40, 60, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+    --white: #1E1E2E;
+    --grey-100: #2D2D3F;
     --text-primary: #FFFFFF;
     --text-secondary: #B0B0B0;
     --card-bg: rgba(30, 30, 50, 0.6);
@@ -84,15 +133,31 @@ html {
 }
 
 body {
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg-gradient);
     background-attachment: fixed;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     color: var(--text-primary);
-    line-height: 1.6;
-    transition: background 0.5s var(--ease-smooth), color 0.3s var(--ease-smooth);
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Premium Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--text-primary);
 }
 
 /* Removed global .container override to prevent layout conflicts */
@@ -124,35 +189,24 @@ html {
 .navbar-toggler {
     border: none !important;
     padding: 0.5rem 0.65rem !important;
-    background: linear-gradient(135deg, #fe424d, #ff6b6b) !important;
-    border-radius: 10px !important;
-    box-shadow: 0 2px 8px rgba(254, 66, 77, 0.3) !important;
-    transition: all 0.3s ease !important;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px var(--primary-glow) !important;
+    transition: all 0.3s var(--ease-elastic) !important;
 }
 
 .navbar-toggler:focus {
-    box-shadow: 0 0 0 3px rgba(254, 66, 77, 0.3) !important;
+    box-shadow: 0 0 0 4px var(--primary-glow) !important;
     outline: none !important;
 }
 
 .navbar-toggler:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(254, 66, 77, 0.4) !important;
+    transform: scale(1.08) rotate(3deg);
+    box-shadow: 0 6px 20px var(--primary-glow) !important;
 }
 
 .navbar-toggler-icon {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
-}
-
-.fa-compass {
-    color: var(--primary);
-    font-size: 2.5rem;
-    transition: all 0.5s var(--ease-bounce);
-}
-
-.fa-compass:hover {
-    transform: rotate(360deg) scale(1.1);
-    color: var(--secondary);
 }
 
 .container-fluid {
@@ -497,15 +551,17 @@ html {
 }
 
 .f-info-brand {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary), var(--accent-purple), var(--accent-pink));
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
     animation: gradient-shift 3s ease infinite;
     background-size: 200% 200%;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 @keyframes gradient-shift {
@@ -608,13 +664,13 @@ html {
 
 /* SMOOTH HOVER */
 .listing-card:hover {
-    transform: translateY(-15px) scale(1.025) !important;
-    background: rgba(255, 255, 255, 0.45) !important;
+    transform: translateY(-12px) scale(1.02) !important;
+    background: rgba(255, 255, 255, 0.5) !important;
     box-shadow:
-        0 28px 70px rgba(0, 0, 0, 0.18),
-        0 12px 30px rgba(255, 56, 92, 0.12),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.85) !important;
-    border-color: rgba(255, 255, 255, 0.85) !important;
+        0 25px 50px rgba(0, 0, 0, 0.15),
+        0 10px 30px var(--primary-glow),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(99, 102, 241, 0.3) !important;
 }
 
 .listing-link {
@@ -666,7 +722,7 @@ html {
 }
 
 .listing-card:hover .card-text b {
-    color: #FF385C;
+    color: var(--primary);
 }
 
 /* ===== Price ===== */
@@ -688,8 +744,9 @@ html {
 }
 
 .listing-rating i {
-    color: #FF385C;
-    font-size: 0.8rem;
+    color: var(--accent);
+    font-size: 0.85rem;
+    filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.4));
 }
 
 /* ===== Tax Info ===== */
@@ -715,12 +772,12 @@ html {
 }
 
 [data-theme="dark"] .listing-card:hover {
-    background: rgba(40, 40, 60, 0.5) !important;
+    background: rgba(40, 40, 60, 0.6) !important;
     box-shadow:
-        0 25px 60px rgba(0, 0, 0, 0.4),
-        0 10px 25px rgba(255, 56, 92, 0.15),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 56, 92, 0.4) !important;
+        0 25px 60px rgba(0, 0, 0, 0.5),
+        0 10px 25px var(--primary-glow),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    border-color: rgba(99, 102, 241, 0.5) !important;
 }
 
 [data-theme="dark"] .card-body {
@@ -753,16 +810,17 @@ html {
 .add-btn {
     background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
     border: none !important;
-    border-radius: 12px !important;
+    border-radius: var(--radius-md) !important;
     padding: 0.75rem 1.5rem !important;
     font-weight: 700 !important;
-    box-shadow: 0 4px 15px rgba(255, 56, 92, 0.3);
-    transition: all 0.3s var(--ease-bounce) !important;
+    font-family: 'Outfit', sans-serif !important;
+    box-shadow: 0 4px 15px var(--primary-glow);
+    transition: all 0.3s var(--ease-elastic) !important;
 }
 
 .add-btn:hover {
-    transform: translateY(-3px) !important;
-    box-shadow: 0 8px 25px rgba(255, 56, 92, 0.4) !important;
+    transform: translateY(-4px) scale(1.02) !important;
+    box-shadow: 0 10px 30px var(--primary-glow), var(--shadow-glow) !important;
 }
 
 .btns {
@@ -821,6 +879,53 @@ html {
 
 .delete-btn i {
     font-size: 0.9rem;
+}
+
+/* Book Now Button - Main CTA */
+.book-now-main-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 1.1rem 2rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    color: #fff !important;
+    background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+    border: none;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    box-shadow: 0 6px 25px var(--primary-glow);
+    transition: all 0.4s var(--ease-elastic);
+    position: relative;
+    overflow: hidden;
+}
+
+.book-now-main-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.book-now-main-btn:hover::before {
+    left: 100%;
+}
+
+.book-now-main-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(254, 66, 77, 0.5);
+    color: #fff !important;
+}
+
+.book-now-main-btn i {
+    font-size: 1rem;
 }
 
 /* ============================================
@@ -953,9 +1058,10 @@ html {
    BACK TO TOP BUTTON
    ============================================ */
 .back-to-top {
-    position: fixed;
-    bottom: 100px;
-    right: 30px;
+    position: fixed !important;
+    bottom: 100px !important;
+    right: 30px !important;
+    left: auto !important;
     width: 45px;
     height: 45px;
     border-radius: 50%;
@@ -1997,7 +2103,7 @@ select.form-control option {
 
 select.form-control option:checked,
 select.form-control option:hover {
-    background-color: #fe424d !important;
+    background-color: #3B82F6 !important;
     color: #ffffff !important;
 }
 
@@ -2008,7 +2114,7 @@ select.form-control option:hover {
 
 [data-theme="dark"] select.form-control option:checked,
 [data-theme="dark"] select.form-control option:hover {
-    background-color: #fe424d !important;
+    background-color: #3B82F6 !important;
     color: #ffffff !important;
 }
 
@@ -2593,8 +2699,8 @@ select.form-control option:hover {
 }
 
 .custom-select.active {
-    border-color: #fe424d;
-    box-shadow: 0 0 0 4px rgba(254, 66, 77, 0.15);
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
 
 .custom-select .arrow {
@@ -2605,7 +2711,7 @@ select.form-control option:hover {
 
 .custom-select.active .arrow {
     transform: rotate(180deg);
-    color: #fe424d;
+    color: #3B82F6;
 }
 
 .custom-options {
@@ -2647,12 +2753,12 @@ select.form-control option:hover {
 }
 
 .custom-option:hover {
-    background: #fff0f1;
-    color: #fe424d;
+    background: #EFF6FF;
+    color: #3B82F6;
 }
 
 .custom-option.selected {
-    background: #fe424d;
+    background: #3B82F6;
     color: #fff;
     font-weight: 500;
 }
@@ -2697,8 +2803,8 @@ select.form-control option:hover {
 }
 
 [data-theme="dark"] .custom-select.active {
-    border-color: #fe424d;
-    background: rgba(254, 66, 77, 0.05);
+    border-color: #3B82F6;
+    background: rgba(59, 130, 246, 0.05);
 }
 
 [data-theme="dark"] .custom-options {
@@ -2712,12 +2818,12 @@ select.form-control option:hover {
 }
 
 [data-theme="dark"] .custom-option:hover {
-    background: rgba(254, 66, 77, 0.15);
-    color: #fe424d;
+    background: rgba(59, 130, 246, 0.15);
+    color: #60A5FA;
 }
 
 [data-theme="dark"] .custom-option.selected {
-    background: #fe424d;
+    background: #3B82F6;
     color: white;
 }
 
@@ -2846,4 +2952,245 @@ select.form-control option:hover {
 
 .no-more-listings.hidden {
     display: none;
+}
+
+/* ============================================
+   Z-INDEX & POSITION FIXES
+   ============================================ */
+
+/* Ensure navbar stays on top */
+.navbar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1050 !important;
+}
+
+/* Ensure content is properly layered */
+.container,
+.container-fluid,
+.f-info,
+.chat-widget-btn,
+.chat-window,
+.back-to-top,
+.dark-mode-toggle {
+    position: relative;
+    z-index: 10;
+}
+
+.listing-card,
+.auth-card,
+.new-listing-card,
+.review-card,
+.liting-card {
+    position: relative;
+    z-index: 2;
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
+.toast-container-wrapper {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 400px;
+    padding: 0 1rem;
+}
+
+.custom-toast {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    animation: slideIn 0.5s ease forwards;
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+.toast-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.toast-success .toast-icon {
+    color: #10b981;
+}
+
+.toast-error .toast-icon {
+    color: #ef4444;
+}
+
+.toast-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.toast-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #1a1a1a;
+}
+
+.toast-message {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color 0.2s;
+}
+
+.toast-close:hover {
+    color: #333;
+}
+
+.toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    animation: progressBar 4s linear forwards;
+}
+
+.toast-error .toast-progress {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+@keyframes progressBar {
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
+}
+
+/* Dark Mode Toast */
+[data-theme="dark"] .custom-toast {
+    background: rgba(40, 40, 60, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .toast-title {
+    color: #fff;
+}
+
+[data-theme="dark"] .toast-message {
+    color: #a0a0a0;
+}
+
+[data-theme="dark"] .toast-close {
+    color: #888;
+}
+
+[data-theme="dark"] .toast-close:hover {
+    color: #fff;
+}
+
+/* ============================================
+   BOOK NOW BUTTON - Show Page
+   ============================================ */
+.book-now-main-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    color: #fff !important;
+    background: linear-gradient(135deg, #fe424d 0%, #ff6b6b 100%);
+    border: none;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 8px 25px rgba(254, 66, 77, 0.4);
+    transition: all 0.3s ease;
+}
+
+.book-now-main-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(254, 66, 77, 0.5);
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.book-now-main-btn i {
+    margin-right: 0.5rem;
+}
+
+/* Edit and Delete Buttons */
+.edit-btn {
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
+    color: #fff !important;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-right: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(59, 130, 246, 0.4);
+    color: #fff;
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: #fff !important;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(220, 53, 69, 0.4);
+    color: #fff;
 }

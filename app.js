@@ -39,12 +39,12 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://unpkg.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://unpkg.com", "https://checkout.razorpay.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
-      imgSrc: ["'self'", "data:", "blob:", "https://res.cloudinary.com", "https://images.unsplash.com", "https://picsum.photos", "https://*.tile.openstreetmap.org", "https://cdn-icons-png.flaticon.com"],
-      connectSrc: ["'self'", "https://nominatim.openstreetmap.org", "https://api.open-meteo.com", "https://api.cloudinary.com", "https://*.cloudinary.com"],
-      frameSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "blob:", "https://res.cloudinary.com", "https://images.unsplash.com", "https://picsum.photos", "https://*.tile.openstreetmap.org", "https://cdn-icons-png.flaticon.com", "https://*.razorpay.com"],
+      connectSrc: ["'self'", "https://nominatim.openstreetmap.org", "https://api.open-meteo.com", "https://api.cloudinary.com", "https://*.cloudinary.com", "https://*.razorpay.com", "https://lumberjack.razorpay.com"],
+      frameSrc: ["'self'", "https://api.razorpay.com", "https://checkout.razorpay.com"],
     },
   },
   crossOriginEmbedderPolicy: false,
@@ -140,6 +140,10 @@ app.use("/", Userroute);
 app.use("/listings", listingsRoute);
 app.use("/listings/:id/review", reviewRoute);
 
+
+// Booking routes
+const bookingRoute = require("./route/booking.js");
+app.use("/bookings", bookingRoute);
 
 // Fix favicon request
 app.get("/favicon.ico", (req, res) => res.status(204).end());

@@ -1,15 +1,27 @@
 <style>
+  /* ============================================
+     🌊 OCEAN BREEZE NAVBAR - Fresh Blue
+     ============================================ */
+
+  /* Vibrant Blue Search Button */
   .btn-search {
-    background-color: #fe424d;
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
     color: white;
-    border-radius: 25px;
-    padding: 0 1rem 0 1rem;
+    border-radius: 50px;
+    padding: 0.65rem 1.6rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   .btn-search:hover {
-    background-color: #fe424d;
+    background: linear-gradient(135deg, #60A5FA, #3B82F6);
     color: white;
-    opacity: 0.9;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
   }
 
   .btn-search i {
@@ -17,51 +29,64 @@
     margin-right: 0.5rem;
   }
 
+  /* Clean White Search Input */
   .search-input {
-    border-radius: 25px;
-    padding: 0.5rem 3rem 0.5rem 3rem;
-    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 2px solid rgba(59, 130, 246, 0.2) !important;
+    color: #1E293B !important;
+    border-radius: 50px;
+    padding: 0.65rem 3rem 0.65rem 1.5rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
   }
 
-  /* User Menu Dropdown Styles */
+  .search-input::placeholder {
+    color: #94A3B8 !important;
+  }
+
+  .search-input:focus {
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+    background: #FFFFFF !important;
+  }
+
+  /* Blue User Menu Button */
   .user-menu-btn {
-    background: linear-gradient(135deg, #fe424d, #ff6b6b);
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
     border: none;
     border-radius: 50%;
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-size: 1.1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(254, 66, 77, 0.3);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35);
   }
 
   .user-menu-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(254, 66, 77, 0.4);
-    background: linear-gradient(135deg, #ff6b6b, #fe424d);
+    transform: scale(1.1);
+    box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
+    background: linear-gradient(135deg, #60A5FA, #3B82F6);
   }
 
   .user-menu-btn::after {
     display: none !important;
   }
 
+  /* Fresh White Dropdown Menu */
   .user-dropdown-menu,
   .dropdown-menu.user-dropdown-menu {
     border: none !important;
     border-radius: 16px !important;
-    /* Glassmorphism Effect */
-    background: rgba(255, 255, 255, 0.75) !important;
-    backdrop-filter: blur(25px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    box-shadow:
-      0 10px 40px rgba(0, 0, 0, 0.2),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.7) !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(59, 130, 246, 0.15) !important;
+    box-shadow: 0 15px 50px rgba(59, 130, 246, 0.2) !important;
     padding: 0.5rem 0 !important;
     min-width: 220px !important;
     margin-top: 10px !important;
@@ -83,22 +108,58 @@
 
   .user-dropdown-header {
     padding: 1rem 1.2rem;
-    background: rgba(248, 249, 250, 0.6);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(238, 238, 238, 0.5);
+    background: rgba(11, 29, 42, 0.8);
+    border-bottom: 1px solid rgba(77, 163, 255, 0.1);
   }
 
   .user-dropdown-header .username {
     font-weight: 600;
-    color: #333;
+    color: #1E293B;
     font-size: 1rem;
     margin: 0;
   }
 
   .user-dropdown-header .email-hint {
     font-size: 0.75rem;
-    color: #888;
+    color: #64748B;
     margin: 0;
+  }
+
+  .user-dropdown-menu .dropdown-item {
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: #475569;
+    transition: all 0.2s ease;
+    background: transparent;
+  }
+
+  .user-dropdown-menu .dropdown-item:hover {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+  }
+
+  .user-dropdown-menu .dropdown-item i {
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+    color: #3B82F6;
+  }
+
+  .user-dropdown-menu .dropdown-divider {
+    margin: 0.3rem 0;
+    border-color: rgba(59, 130, 246, 0.1);
+  }
+
+  .user-dropdown-menu .logout-item {
+    color: #EF4444;
+  }
+
+  .user-dropdown-menu .logout-item:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #DC2626;
   }
 
   .user-dropdown-menu .dropdown-item {
@@ -113,9 +174,9 @@
   }
 
   .user-dropdown-menu .dropdown-item:hover {
-    background: rgba(255, 245, 245, 0.8);
+    background: rgba(59, 130, 246, 0.1);
     backdrop-filter: blur(10px);
-    color: #fe424d;
+    color: #3B82F6;
   }
 
   .user-dropdown-menu .dropdown-item i {
@@ -126,33 +187,31 @@
 
   .user-dropdown-menu .dropdown-divider {
     margin: 0.3rem 0;
-    border-color: rgba(238, 238, 238, 0.5);
+    border-color: rgba(59, 130, 246, 0.1);
   }
 
   .user-dropdown-menu .logout-item {
-    color: #dc3545;
+    color: #EF4444;
   }
 
   .user-dropdown-menu .logout-item:hover {
-    background: rgba(255, 245, 245, 0.8);
+    background: rgba(239, 68, 68, 0.1);
     backdrop-filter: blur(10px);
-    color: #c82333;
+    color: #DC2626;
   }
 
   /* Dark Mode Support */
   [data-theme="dark"] .user-dropdown-menu {
-    background: rgba(40, 40, 60, 0.9) !important;
+    background: rgba(40, 40, 60, 0.95) !important;
     backdrop-filter: blur(20px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    box-shadow:
-      0 10px 40px rgba(0, 0, 0, 0.5),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(59, 130, 246, 0.15) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
   }
 
   [data-theme="dark"] .user-dropdown-header {
     background: rgba(50, 50, 70, 0.6);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.1);
   }
 
   [data-theme="dark"] .user-dropdown-header .username {
@@ -164,26 +223,35 @@
   }
 
   [data-theme="dark"] .user-dropdown-menu .dropdown-item {
-    color: #ffffff;
+    color: #E6EDF3;
   }
 
   [data-theme="dark"] .user-dropdown-menu .dropdown-item:hover {
-    background: rgba(255, 56, 92, 0.15);
+    background: rgba(59, 130, 246, 0.15);
     backdrop-filter: blur(10px);
-    color: #ff6b8a;
+    color: #60A5FA;
   }
 
   [data-theme="dark"] .user-dropdown-menu .dropdown-divider {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(59, 130, 246, 0.1);
   }
 
   [data-theme="dark"] .user-dropdown-menu .logout-item {
-    color: #ff6b6b;
+    color: #EF4444;
   }
 
   [data-theme="dark"] .user-dropdown-menu .logout-item:hover {
-    background: rgba(255, 107, 107, 0.15);
-    color: #ff8a8a;
+    background: rgba(239, 68, 68, 0.15);
+    color: #FCA5A5;
+  }
+
+  /* Logo 720 degree spin on hover */
+  .navbar-brand img {
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .navbar-brand:hover img {
+    transform: rotate(720deg);
   }
 </style>
 
@@ -192,7 +260,7 @@
 
     <!-- Mobile Header (Logo + Search + Toggler) -->
     <div class="d-flex w-100 align-items-center d-md-none">
-      <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
+      <a class="navbar-brand" href="/listings"><img src="/images/logo.png" alt="TravelOn" style="height: 70px;"></a>
 
       <!-- Mobile Search Bar -->
       <form class="d-flex flex-grow-1 mx-2 align-items-center mobile-search-bar" role="search" action="/listings"
@@ -213,7 +281,8 @@
     </div>
 
     <!-- Desktop Brand (Hidden on mobile) -->
-    <a class="navbar-brand d-none d-md-block" href="/listings"><i class="fa-regular fa-compass"></i></a>
+    <a class="navbar-brand d-none d-md-block" href="/listings"><img src="/images/logo.png" alt="TravelOn"
+        style="height: 70px;"></a>
 
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
@@ -278,6 +347,17 @@
                       <i class="fas fa-key" style="color: #ffc107;"></i> Change Password
                     </a>
                   </li>
+                  <li>
+                    <a class="dropdown-item" href="/bookings/my-bookings">
+                      <i class="fas fa-calendar-check" style="color: #28a745;"></i> My Bookings
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/bookings/host-dashboard">
+                      <i class="fas fa-home" style="color: #6f42c1;"></i> Host Dashboard
+                    </a>
+                  </li>
+
                   <li>
                     <hr class="dropdown-divider">
                   </li>

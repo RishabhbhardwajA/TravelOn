@@ -1,0 +1,737 @@
+<% layout("/layout/boilerplate") %>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        .booking-page {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .booking-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        .listing-preview {
+            display: flex;
+            gap: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 1.5rem;
+        }
+
+        .listing-preview img {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .listing-info h4 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+
+        .listing-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .price-tag {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fe424d;
+            margin-top: 0.5rem;
+        }
+
+        .form-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-section label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .date-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .date-row>div {
+            flex: 1;
+        }
+
+        .guest-row {
+            display: flex;
+            gap: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .guest-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .guest-item span {
+            min-width: 80px;
+        }
+
+        .guest-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .guest-btn {
+            width: 36px;
+            height: 36px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            background: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .guest-btn:hover {
+            border-color: #fe424d;
+            color: #fe424d;
+        }
+
+        .guest-count {
+            font-weight: 600;
+            font-size: 1.1rem;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .price-breakdown {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .price-breakdown.show {
+            display: block;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .price-row.total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #333;
+            border-top: 1px solid #ddd;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .status-msg {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+
+        .status-msg.show {
+            display: block;
+        }
+
+        .status-msg.error {
+            background: #fee;
+            color: #c00;
+        }
+
+        .status-msg.success {
+            background: #efe;
+            color: #080;
+        }
+
+        .status-msg.loading {
+            background: #eef;
+            color: #00c;
+        }
+
+        .book-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: #fe424d;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .book-btn:hover:not(:disabled) {
+            background: #e03a45;
+            transform: translateY(-2px);
+        }
+
+
+        .book-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Premium Modal Styles */
+        .payment-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .payment-modal-overlay.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .payment-modal {
+            background: #fff;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .modal-icon i {
+            font-size: 2.5rem;
+            color: #fff;
+        }
+
+        .payment-modal h3 {
+            margin: 0 0 0.5rem;
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .payment-modal p {
+            color: #666;
+            margin: 0 0 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .modal-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fe424d;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.9rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .modal-btn-cancel {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .modal-btn-confirm {
+            background: linear-gradient(135deg, #fe424d, #ff6b6b);
+            color: #fff;
+        }
+
+        .modal-btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(254, 66, 77, 0.3);
+        }
+
+        .test-badge {
+            display: inline-block;
+            background: #fff3cd;
+            color: #856404;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+    </style>
+
+    <!-- Payment Confirmation Modal -->
+    <div class="payment-modal-overlay" id="paymentModal">
+        <div class="payment-modal">
+            <div class="test-badge"><i class="fas fa-flask"></i> Test Mode</div>
+            <div class="modal-icon">
+                <i class="fas fa-credit-card"></i>
+            </div>
+            <h3>Confirm Payment</h3>
+            <p>This is a test payment. No real money will be charged.</p>
+            <div class="modal-amount" id="modalAmount">₹0</div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" id="modalCancel">Cancel</button>
+                <button class="modal-btn modal-btn-confirm" id="modalConfirm">Pay Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="booking-page">
+        <div class="booking-card">
+            <h2 style="margin-bottom: 1.5rem;">Book Your Stay</h2>
+
+            <!-- Listing Preview -->
+            <div class="listing-preview">
+                <img src="<%= listing.image.url %>" alt="<%= listing.title %>">
+                <div class="listing-info">
+                    <h4>
+                        <%= listing.title %>
+                    </h4>
+                    <p><i class="fas fa-map-marker-alt"></i>
+                        <%= listing.location %>, <%= listing.country %>
+                    </p>
+                    <p>Hosted by <%= listing.owner.username %>
+                    </p>
+                    <div class="price-tag">₹<%= listing.price.toLocaleString("en-IN") %> / night</div>
+                </div>
+            </div>
+
+            <!-- Booking Form -->
+            <form id="bookingForm">
+                <!-- Dates -->
+                <div class="form-section">
+                    <label>Select Dates</label>
+                    <div class="date-row">
+                        <div>
+                            <input type="text" id="checkInInput" class="form-control" placeholder="Check-in" readonly>
+                        </div>
+                        <div>
+                            <input type="text" id="checkOutInput" class="form-control" placeholder="Check-out" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guests -->
+                <div class="form-section">
+                    <label>Guests</label>
+                    <div class="guest-row">
+                        <div class="guest-item">
+                            <span>Adults</span>
+                            <div class="guest-controls">
+                                <button type="button" class="guest-btn" id="adultsMinus">−</button>
+                                <span class="guest-count" id="adultsCount">1</span>
+                                <button type="button" class="guest-btn" id="adultsPlus">+</button>
+                            </div>
+                        </div>
+                        <div class="guest-item">
+                            <span>Children</span>
+                            <div class="guest-controls">
+                                <button type="button" class="guest-btn" id="childrenMinus">−</button>
+                                <span class="guest-count" id="childrenCount">0</span>
+                                <button type="button" class="guest-btn" id="childrenPlus">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special Requests -->
+                <div class="form-section">
+                    <label>Special Requests (Optional)</label>
+                    <textarea id="specialRequests" class="form-control" rows="2"
+                        placeholder="Any special requirements..."></textarea>
+                </div>
+
+                <!-- Status Message -->
+                <div id="statusMsg" class="status-msg"></div>
+
+                <!-- Price Breakdown -->
+                <div id="priceBreakdown" class="price-breakdown">
+                    <div class="price-row">
+                        <span>₹<%= listing.price.toLocaleString("en-IN") %> × <span id="nightsText">0</span>
+                                nights</span>
+                        <span>₹<span id="subtotalText">0</span></span>
+                    </div>
+                    <div class="price-row total">
+                        <span>Total</span>
+                        <span>₹<span id="totalText">0</span></span>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="book-btn" id="bookBtn" disabled>Select dates to continue</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Hidden data for JavaScript -->
+    <input type="hidden" id="serverData" data-listing-id="<%= listing._id %>" data-price="<%= listing.price %>"
+        data-booked='<%= JSON.stringify(bookedDates || []) %>' data-mock="<%= mockMode ? 'true' : 'false' %>">
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        (function () {
+            // ========== SERVER DATA from hidden input ==========
+            var serverData = document.getElementById('serverData');
+            var LISTING_ID = serverData.dataset.listingId;
+            var PRICE_PER_NIGHT = parseInt(serverData.dataset.price);
+            var BOOKED_DATES = JSON.parse(serverData.dataset.booked || '[]');
+            var IS_MOCK_MODE = serverData.dataset.mock === 'true';
+
+            console.log("📅 Booking page loaded");
+            console.log("📅 Listing ID:", LISTING_ID);
+            console.log("📅 Mock Mode:", IS_MOCK_MODE);
+            console.log("📅 Booked Dates:", BOOKED_DATES);
+
+            // ========== STATE ==========
+            var guests = { adults: 1, children: 0 };
+            var checkInDate = null;
+            var checkOutDate = null;
+
+            // ========== DOM ELEMENTS ==========
+            var checkInInput = document.getElementById("checkInInput");
+            var checkOutInput = document.getElementById("checkOutInput");
+            var adultsCount = document.getElementById("adultsCount");
+            var childrenCount = document.getElementById("childrenCount");
+            var statusMsg = document.getElementById("statusMsg");
+            var priceBreakdown = document.getElementById("priceBreakdown");
+            var bookBtn = document.getElementById("bookBtn");
+            var bookingForm = document.getElementById("bookingForm");
+
+            // ========== FLATPICKR INIT ==========
+            var disableRanges = BOOKED_DATES.map(function (b) {
+                return { from: b.from, to: b.to };
+            });
+
+            var fpCheckIn = flatpickr(checkInInput, {
+                minDate: "today",
+                dateFormat: "Y-m-d",
+                disable: disableRanges,
+                onChange: function (dates, dateStr) {
+                    checkInDate = dates[0];
+                    fpCheckOut.set("minDate", dateStr);
+                    console.log("📅 Check-in selected:", dateStr);
+                    checkAndUpdatePrice();
+                }
+            });
+
+            var fpCheckOut = flatpickr(checkOutInput, {
+                minDate: "today",
+                dateFormat: "Y-m-d",
+                disable: disableRanges,
+                onChange: function (dates, dateStr) {
+                    checkOutDate = dates[0];
+                    console.log("📅 Check-out selected:", dateStr);
+                    checkAndUpdatePrice();
+                }
+            });
+
+            // ========== GUEST CONTROLS ==========
+            document.getElementById("adultsPlus").addEventListener("click", function () {
+                guests.adults++;
+                adultsCount.textContent = guests.adults;
+                console.log("👥 Adults:", guests.adults);
+            });
+
+            document.getElementById("adultsMinus").addEventListener("click", function () {
+                if (guests.adults > 1) {
+                    guests.adults--;
+                    adultsCount.textContent = guests.adults;
+                    console.log("👥 Adults:", guests.adults);
+                }
+            });
+
+            document.getElementById("childrenPlus").addEventListener("click", function () {
+                guests.children++;
+                childrenCount.textContent = guests.children;
+                console.log("👶 Children:", guests.children);
+            });
+
+            document.getElementById("childrenMinus").addEventListener("click", function () {
+                if (guests.children > 0) {
+                    guests.children--;
+                    childrenCount.textContent = guests.children;
+                    console.log("👶 Children:", guests.children);
+                }
+            });
+
+            // ========== CHECK AVAILABILITY & PRICE ==========
+            function checkAndUpdatePrice() {
+                if (!checkInDate || !checkOutDate) {
+                    hidePrice();
+                    bookBtn.disabled = true;
+                    bookBtn.textContent = "Select dates to continue";
+                    return;
+                }
+
+                if (checkInDate >= checkOutDate) {
+                    showStatus("Check-out must be after check-in", "error");
+                    hidePrice();
+                    bookBtn.disabled = true;
+                    return;
+                }
+
+                showStatus("Checking availability...", "loading");
+                bookBtn.disabled = true;
+
+                fetch("/bookings/" + LISTING_ID + "/check-availability", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        checkIn: formatDate(checkInDate),
+                        checkOut: formatDate(checkOutDate)
+                    })
+                })
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        console.log("📅 Availability response:", data);
+
+                        if (data.available) {
+                            hideStatus();
+                            showPrice();
+                            bookBtn.disabled = false;
+                            bookBtn.textContent = IS_MOCK_MODE ? "Book Now (Test Mode)" : "Proceed to Payment";
+                        } else {
+                            showStatus(data.error || "Dates not available", "error");
+                            hidePrice();
+                            bookBtn.disabled = true;
+                        }
+                    })
+                    .catch(function (err) {
+                        console.error("❌ Availability check failed:", err);
+                        showStatus("Error checking availability", "error");
+                    });
+            }
+
+            function showPrice() {
+                var nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+                var total = nights * PRICE_PER_NIGHT;
+
+                document.getElementById("nightsText").textContent = nights;
+                document.getElementById("subtotalText").textContent = total.toLocaleString("en-IN");
+                document.getElementById("totalText").textContent = total.toLocaleString("en-IN");
+
+                priceBreakdown.classList.add("show");
+            }
+
+            function hidePrice() {
+                priceBreakdown.classList.remove("show");
+            }
+
+            function showStatus(msg, type) {
+                statusMsg.textContent = msg;
+                statusMsg.className = "status-msg show " + type;
+            }
+
+            function hideStatus() {
+                statusMsg.className = "status-msg";
+            }
+
+            function formatDate(date) {
+                return date.toISOString().split("T")[0];
+            }
+
+            // ========== FORM SUBMIT ==========
+            bookingForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                console.log("📤 Submitting booking...");
+
+                bookBtn.disabled = true;
+                bookBtn.textContent = "Processing...";
+
+                var nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+                var totalPrice = nights * PRICE_PER_NIGHT;
+
+                var payload = {
+                    checkIn: formatDate(checkInDate),
+                    checkOut: formatDate(checkOutDate),
+                    guests: guests,
+                    totalPrice: totalPrice,
+                    specialRequests: document.getElementById("specialRequests").value
+                };
+
+                console.log("📤 Payload:", payload);
+
+                fetch("/bookings/" + LISTING_ID + "/create-order", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                })
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        console.log("📤 Order response:", data);
+
+                        if (!data.success) {
+                            showStatus(data.message || "Booking failed", "error");
+                            bookBtn.disabled = false;
+                            bookBtn.textContent = "Try Again";
+                            return;
+                        }
+
+                        if (data.mockMode) {
+                            // Mock payment - show premium modal
+                            console.log("🧪 Mock mode - showing modal...");
+                            showPaymentModal(totalPrice, data.bookingId);
+                        } else {
+                            // Real Razorpay payment
+                            console.log("💳 Opening Razorpay...");
+                            var options = {
+                                key: data.keyId,
+                                amount: data.amount || (totalPrice * 100),
+                                currency: "INR",
+                                name: "TravelOn",
+                                description: "Booking Payment",
+                                order_id: data.orderId,
+                                handler: function (response) {
+                                    verifyPayment(data.bookingId, response.razorpay_payment_id, response.razorpay_signature, false);
+                                },
+                                theme: { color: "#fe424d" }
+                            };
+                            var rzp = new Razorpay(options);
+                            rzp.open();
+                        }
+                    })
+                    .catch(function (err) {
+                        console.error("❌ Order creation failed:", err);
+                        showStatus("Something went wrong", "error");
+                        bookBtn.disabled = false;
+                        bookBtn.textContent = "Try Again";
+                    });
+            });
+
+            function verifyPayment(bookingId, paymentId, signature, isMock) {
+                console.log("✅ Verifying payment...");
+
+                fetch("/bookings/verify-payment", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        bookingId: bookingId,
+                        razorpayPaymentId: paymentId,
+                        razorpaySignature: signature,
+                        mockPayment: isMock
+                    })
+                })
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        console.log("✅ Verify response:", data);
+                        if (data.success) {
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            showStatus("Payment verification failed", "error");
+                            bookBtn.disabled = false;
+                        }
+                    })
+                    .catch(function (err) {
+                        console.error("❌ Verify failed:", err);
+                        showStatus("Verification error", "error");
+                    });
+            }
+
+            // ========== PAYMENT MODAL ==========
+            var paymentModal = document.getElementById('paymentModal');
+            var modalAmount = document.getElementById('modalAmount');
+            var modalConfirmBtn = document.getElementById('modalConfirm');
+            var modalCancelBtn = document.getElementById('modalCancel');
+            var pendingBookingId = null;
+
+            function showPaymentModal(amount, bookingId) {
+                pendingBookingId = bookingId;
+                modalAmount.textContent = '₹' + amount.toLocaleString('en-IN');
+                paymentModal.classList.add('show');
+            }
+
+            function hidePaymentModal() {
+                paymentModal.classList.remove('show');
+                bookBtn.disabled = false;
+                bookBtn.textContent = 'Book Now (Test Mode)';
+            }
+
+            modalConfirmBtn.addEventListener('click', function () {
+                paymentModal.classList.remove('show');
+                verifyPayment(pendingBookingId, null, null, true);
+            });
+
+            modalCancelBtn.addEventListener('click', function () {
+                hidePaymentModal();
+            });
+
+            // Close modal on overlay click
+            paymentModal.addEventListener('click', function (e) {
+                if (e.target === paymentModal) {
+                    hidePaymentModal();
+                }
+            });
+        })();
+    </script>

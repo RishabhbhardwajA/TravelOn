@@ -1,0 +1,376 @@
+<% layout("/layout/boilerplate") %>
+
+    <style>
+        .host-dashboard {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h2 {
+            margin: 0 0 0.3rem 0;
+        }
+
+        .dashboard-header p {
+            color: #888;
+            margin: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: #fe424d;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            display: block;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .booking-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            background: transparent;
+            color: #666;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: #fe424d;
+            color: #fff;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #eee;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .booking-table {
+            width: 100%;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .booking-table th {
+            background: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .booking-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .booking-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .booking-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .guest-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #fe424d;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: #f8f9fa;
+            border-radius: 16px;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+            display: block;
+        }
+    </style>
+
+    <div class="host-dashboard">
+        <div class="dashboard-header">
+            <h2><i class="fas fa-home" style="color: #fe424d;"></i> Host Dashboard</h2>
+            <p>Manage bookings for your properties</p>
+        </div>
+
+        <% const now=new Date(); const pending=bookings.filter(b=> b.status === 'pending');
+            const upcoming = bookings.filter(b => b.status === 'confirmed' && new Date(b.checkIn) > now);
+            const completed = bookings.filter(b => new Date(b.checkOut) < now || b.status==='completed' ); const
+                totalEarnings=bookings.filter(b=> b.status === 'confirmed' || b.status === 'completed').reduce((sum, b)
+                => sum + b.totalPrice, 0);
+                %>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span class="stat-value">
+                            <%= pending.length %>
+                        </span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-check"></i>
+                        <span class="stat-value">
+                            <%= upcoming.length %>
+                        </span>
+                        <span class="stat-label">Upcoming</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-double"></i>
+                        <span class="stat-value">
+                            <%= completed.length %>
+                        </span>
+                        <span class="stat-label">Completed</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-rupee-sign"></i>
+                        <span class="stat-value">
+                            <%= totalEarnings.toLocaleString("en-IN") %>
+                        </span>
+                        <span class="stat-label">Total Earnings</span>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="booking-tabs">
+                    <button class="tab-btn active" id="upcomingTab">
+                        <i class="fas fa-calendar-check"></i> Upcoming (<%= upcoming.length %>)
+                    </button>
+                    <button class="tab-btn" id="pendingTab">
+                        <i class="fas fa-hourglass-half"></i> Pending (<%= pending.length %>)
+                    </button>
+                    <button class="tab-btn" id="completedTab">
+                        <i class="fas fa-check-double"></i> Completed (<%= completed.length %>)
+                    </button>
+                </div>
+
+                <!-- Upcoming -->
+                <div id="upcomingContent" class="tab-content active">
+                    <% if(upcoming.length===0) { %>
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-plus"></i>
+                            <h4>No upcoming bookings</h4>
+                            <p>Confirmed bookings will appear here</p>
+                        </div>
+                        <% } else { %>
+                            <table class="booking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Listing</th>
+                                        <th>Guest</th>
+                                        <th>Dates</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% upcoming.forEach(function(b) { %>
+                                        <tr>
+                                            <td><strong>
+                                                    <%= b.listing ? b.listing.title : 'N/A' %>
+                                                </strong></td>
+                                            <td><span class="guest-avatar">
+                                                    <%= b.guest ? b.guest.username.charAt(0).toUpperCase() : '?' %>
+                                                </span>
+                                                <%= b.guest ? b.guest.username : 'Unknown' %>
+                                            </td>
+                                            <td>
+                                                <%= new Date(b.checkIn).toLocaleDateString("en-IN", {day: "numeric" ,
+                                                    month: "short" }) %> - <%= new
+                                                        Date(b.checkOut).toLocaleDateString("en-IN", {day: "numeric" ,
+                                                        month: "short" }) %>
+                                            </td>
+                                            <td><strong>₹<%= b.totalPrice.toLocaleString("en-IN") %></strong></td>
+                                            <td><span class="status-badge status-confirmed">CONFIRMED</span></td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                            <% } %>
+                </div>
+
+                <!-- Pending -->
+                <div id="pendingContent" class="tab-content">
+                    <% if(pending.length===0) { %>
+                        <div class="empty-state">
+                            <i class="fas fa-hourglass-start"></i>
+                            <h4>No pending bookings</h4>
+                            <p>Bookings awaiting payment will appear here</p>
+                        </div>
+                        <% } else { %>
+                            <table class="booking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Listing</th>
+                                        <th>Guest</th>
+                                        <th>Dates</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% pending.forEach(function(b) { %>
+                                        <tr>
+                                            <td>
+                                                <%= b.listing ? b.listing.title : 'N/A' %>
+                                            </td>
+                                            <td>
+                                                <%= b.guest ? b.guest.username : 'Unknown' %>
+                                            </td>
+                                            <td>
+                                                <%= new Date(b.checkIn).toLocaleDateString("en-IN", {day: "numeric" ,
+                                                    month: "short" }) %> - <%= new
+                                                        Date(b.checkOut).toLocaleDateString("en-IN", {day: "numeric" ,
+                                                        month: "short" }) %>
+                                            </td>
+                                            <td>₹<%= b.totalPrice.toLocaleString("en-IN") %>
+                                            </td>
+                                            <td><span class="status-badge status-pending">PENDING</span></td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                            <% } %>
+                </div>
+
+                <!-- Completed -->
+                <div id="completedContent" class="tab-content">
+                    <% if(completed.length===0) { %>
+                        <div class="empty-state">
+                            <i class="fas fa-trophy"></i>
+                            <h4>No completed bookings</h4>
+                            <p>Your hosting history will appear here</p>
+                        </div>
+                        <% } else { %>
+                            <table class="booking-table">
+                                <thead>
+                                    <tr>
+                                        <th>Listing</th>
+                                        <th>Guest</th>
+                                        <th>Dates</th>
+                                        <th>Earned</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% completed.forEach(function(b) { %>
+                                        <tr>
+                                            <td>
+                                                <%= b.listing ? b.listing.title : 'N/A' %>
+                                            </td>
+                                            <td>
+                                                <%= b.guest ? b.guest.username : 'Unknown' %>
+                                            </td>
+                                            <td>
+                                                <%= new Date(b.checkIn).toLocaleDateString("en-IN", {day: "numeric" ,
+                                                    month: "short" }) %> - <%= new
+                                                        Date(b.checkOut).toLocaleDateString("en-IN", {day: "numeric" ,
+                                                        month: "short" }) %>
+                                            </td>
+                                            <td><strong style="color: #28a745;">₹<%=
+                                                        b.totalPrice.toLocaleString("en-IN") %></strong></td>
+                                            <td><span class="status-badge status-completed">COMPLETED</span></td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                            <% } %>
+                </div>
+    </div>
+
+    <script>
+        var tabs = document.querySelectorAll('.tab-btn');
+        var contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                tabs.forEach(function (t) { t.classList.remove('active'); });
+                contents.forEach(function (c) { c.classList.remove('active'); });
+                tab.classList.add('active');
+                document.getElementById(tab.id.replace('Tab', 'Content')).classList.add('active');
+            });
+        });
+    </script>
